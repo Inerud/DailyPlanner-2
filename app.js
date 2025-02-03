@@ -13,7 +13,7 @@ app.use(express.static('public'));
 
 // Routes
 app.get('/', (req, res) => {
-  res.send('Welcome to the Daily Planner App!');
+    res.sendFile(__dirname + '/views/index.html');
 });
 
 // Start the server
