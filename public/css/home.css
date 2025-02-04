@@ -1,0 +1,202 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Global Styles */
+body {
+    font-family: "Noto Sans Display", sans-serif;
+    background-color: #F8F9FA; /* Soft neutral background */
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Layout Grid */
+.container {
+    display: grid;
+    grid-template-areas:
+        "aside header header"
+        "aside main main"
+        "aside footer footer";
+    grid-template-columns: 1fr 5fr 5fr;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+    gap: 10px;
+}
+
+/* Header */
+header {
+    grid-area: header;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FFF;
+    padding: 20px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 1.8rem;
+    color: #0D0630;
+}
+
+header a {
+    text-decoration: none;
+    color: #18314F;
+    font-weight: 600;
+}
+
+header a:hover {
+    color: #EDB5B9;
+}
+
+/* Sidebar */
+aside {
+    grid-area: aside;
+    background-color: #EFEFEF;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+aside ul {
+    list-style: none;
+    width: 100%;
+}
+
+aside ul li {
+    padding: 10px;
+    text-align: center;
+}
+
+aside ul li a {
+    text-decoration: none;
+    color: #18314F;
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+aside ul li a:hover {
+    background-color: #EDB5B9;
+    color: #FFF;
+}
+
+/* Main Section */
+main {
+    grid-area: main;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+}
+
+.todo,
+.exercise {
+    background: #FFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.todo h1,
+.exercise h1 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.todo ul {
+    list-style: none;
+}
+
+.todo ul li {
+    background: #F8F9FA;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+/* Footer */
+footer {
+    grid-area: footer;
+    background-color: #FFF;
+    padding: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+/* Calendar */
+/* Calendar styles */
+.calendar {
+    grid-area: calendar;
+    grid-column: span 2;
+}
+.month {
+    background: #EDB5B9;
+    padding: 70px 25px;
+    text-align: center;
+    width: 100%;
+}
+
+.month ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.month ul li {
+    color: white;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.month .prev {
+    float: left;
+    padding-top: 10px;
+}
+
+.month .next {
+    float: right;
+    padding-top: 10px;
+}
+
+.weekdays {
+    background-color: #ddd;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.weekdays li {
+    display: inline-block;
+    width: 13.6%;
+    color: #666;
+}
+
+.days {
+    background: #eee;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.days li {
+    display: inline-block;
+    width: 13.6%;
+    color: #777;
+    font-size: 12px;
+    margin-bottom: 5px;
+    list-style-type: none;
+}
+
+.today {
+    background: #EDB5B9;
+    color: white !important;
+    padding: 5px;
+}

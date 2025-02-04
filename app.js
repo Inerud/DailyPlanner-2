@@ -18,10 +18,10 @@ const config = {
 // Use Auth0 middleware
 app.use(auth(config));
 
-// Serve static files (important!)
+// Serve static files
 app.use(express.static(path.join(__dirname, "public")));
 
-// API Route to provide user data to the frontend
+// API route for user data
 app.get("/api/user", (req, res) => {
   if (req.oidc.isAuthenticated()) {
     res.json({ user: req.oidc.user });
@@ -35,12 +35,16 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
-// Logout route (Redirects to Auth0 logout)
+// Serve journal.html
+app.get("/journal", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "journal.html"));
+})
+
+// Logout route (Redirects to Auth0)
 app.get("/logout", (req, res) => {
   res.oidc.logout({ returnTo: process.env.AUTH0_BASE_URL });
 });
 
-// Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
