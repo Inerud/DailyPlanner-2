@@ -2,6 +2,8 @@ const express = require("express");
 const { auth } = require("express-openid-connect");
 require("dotenv").config();
 const path = require("path");
+const mysql = require("mysql2");
+const db = require("./server/config/db.js");
 
 const app = express();
 
@@ -20,6 +22,15 @@ app.use(auth(config));
 
 // Serve static files
 app.use(express.static(path.join(__dirname, "public")));
+
+// Test database connection
+db.connect((err) => {
+  if (err) {
+    console.error("Database connection failed:", err);
+  } else {
+    console.log("Connected to MySQL database.");
+  }
+});
 
 // API route for user data
 app.get("/api/user", (req, res) => {
