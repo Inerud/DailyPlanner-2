@@ -6,6 +6,7 @@ const mysql = require("mysql2");
 const db = require("./server/config/db.js");
 
 const app = express();
+const PORT = process.env.PORT || 3306;
 
 // Auth0 Configuration
 const config = {
@@ -56,7 +57,7 @@ app.get("/logout", (req, res) => {
   res.oidc.logout({ returnTo: process.env.AUTH0_BASE_URL });
 });
 
-const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
