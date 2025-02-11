@@ -6,7 +6,7 @@ const mysql = require("mysql2");
 const db = require("./server/config/db.js");
 
 const app = express();
-const PORT = process.env.PORT || 3306;
+const PORT = process.env.PORT;
 
 // Auth0 Configuration
 const config = {
