@@ -1,6 +1,6 @@
 const request = require("supertest");
 const express = require("express");
-const app = require("../app"); // Ensure this correctly imports your Express app
+const app = require("../app.js"); // Ensure this correctly imports your Express app
 const db = require("../server/config/db.js");
 
 jest.mock("../server/config/db.js"); // Mock MySQL connection
