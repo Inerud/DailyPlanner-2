@@ -33,14 +33,37 @@ db.connect((err) => {
   }
 });
 
+// Function to check if user exists and insert if not
+function saveUserIfNotExists(user) {
+  const query = 'SELECT * FROM users WHERE auth0_id = ?';
+  db.query(query, [user.sub], (err, results) => {
+    if (err) {
+      console.error('Error checking user:', err);
+      return;
+    }
+    if (results.length === 0) {
+      const insertQuery = 'INSERT INTO users (auth0_id, email, name) VALUES (?, ?, ?)';
+      db.query(insertQuery, [user.sub, user.email, user.name], (err, results) => {
+        if (err) {
+          console.error('Error inserting user:', err);
+        } else {
+          console.log('User saved to database:', user.name);
+        }
+      });
+    }
+  });
+}
+
 // API route for user data
 app.get("/api/user", (req, res) => {
   if (req.oidc.isAuthenticated()) {
+    saveUserIfNotExists(req.oidc.user); // Save user if not exists
     res.json({ user: req.oidc.user });
   } else {
     res.json({ user: null });
   }
 });
+
 
 // Serve the main HTML page
 app.get("/", (req, res) => {
