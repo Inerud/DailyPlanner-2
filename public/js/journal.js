@@ -10,6 +10,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const editEntryText = document.getElementById("editEntryText");
     const saveEditButton = document.getElementById("saveEditButton");
 
+    //TO-DO: finish edit
+    //add delete
+    //add image/file saving
+    //styling
+    //add sorting to entries
+    //
+
+
     let currentEntryId = null;
 
     // Load saved journal entry from the database when the page loads
