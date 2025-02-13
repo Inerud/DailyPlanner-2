@@ -60,8 +60,14 @@ function saveUserIfNotExists(user, callback) {
 // API route for user data
 app.get("/api/user", (req, res) => {
   if (req.oidc.isAuthenticated()) {
-    saveUserIfNotExists(req.oidc.user); // Save user if not exists
-    res.json({ user: req.oidc.user });
+    saveUserIfNotExists(req.oidc.user, (err, userId) => {
+      if (err) {
+        console.error('Error saving user:', err);
+        return res.status(500).json({ error: 'Failed to save user' });
+      }
+      console.log('User ID:', userId);
+      res.json({ user: req.oidc.user });
+    });
   } else {
     res.json({ user: null });
   }

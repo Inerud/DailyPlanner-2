@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    async function addEntr(entryText) {
+    async function addEntry(entryText) {
         try {
             const response = await fetch("/api/journal", {
                 method: "POST",
