@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const journalTitle = document.getElementById("journal-title");
     const journalEntry = document.getElementById("journal-entry");
     const saveButton = document.getElementById("save-journal");
     const statusMessage = document.getElementById("status-message");
@@ -10,9 +11,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Save journal entry to localStorage
     saveButton.addEventListener("click", async function () {
+        const entryTitle = journalTitle.value.trim();
         const entryText = journalEntry.value.trim();
+
+        if (entryTitle == "") {
+            entryTitle = getDate();
+        }
+
         if (entryText) {
-            const response = await addEntry(entryText);
+            const response = await addEntry(entryText, entryTitle);
             if (response.success) {
                 statusMessage.textContent = "Journal entry saved!";
                 statusMessage.style.color = "green";
@@ -31,14 +38,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    async function addEntry(entryText) {
+    async function addEntry(entryText, entryTitle) {
         try {
             const response = await fetch("/api/journal", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ entry: entryText }),
+                body: JSON.stringify({ entryTitle: entryTitle, entry: entryText }),
             });
             return await response.json();
         } catch (error) {
@@ -51,18 +58,19 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch("/api/journal");
             const data = await response.json();
-            // Display the latest entry in the textarea
-            if (data.entry) {
-                journalEntry.value = data.entry;
-            }
 
             // Display all previous entries in the 'old-entries' div
             if (data.entries && data.entries.length > 0) {
                 oldEntriesDiv.innerHTML = "<h3>Previous Entries</h3>";  // Reset previous entries header
+                
                 data.entries.forEach(entry => {
                     const entryDiv = document.createElement("div");
-                    entryDiv.classList.add("journal-entry");
-                    entryDiv.innerHTML = `<p>${entry.entry}</p><p><small>Created at: ${entry.created_at}</small></p>`;
+                    entryDiv.classList.add("journal-title-dis");
+                    entryDiv.classList.add("journal-entry-dis");
+                    entryDiv.innerHTML = `
+                        <h4>${entry.entry_title}</h4>
+                        <p>${entry.entry}</p>
+                        <p><small>Created at: ${entry.created_at}</small></p>`;
                     oldEntriesDiv.appendChild(entryDiv);
                 });
             }

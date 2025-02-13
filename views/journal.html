@@ -13,45 +13,49 @@
     <div class="container">
         <header>
             <h1>Journal</h1>
-            <a href="index.html">Back to Home</a>
+            <a href="../">Back to Home</a>
         </header>
 
         <aside>
             <div class="nav">
                 <ul>
                     <hr>
-                    <li><a href="index.html">Meal planner</a></li>
+                    <li><a href="../">Meal planner</a></li>
                     <hr>
-                    <li><a href="index.html">Habits</a></li>
+                    <li><a href="../">Habits</a></li>
                     <hr>
-                    <li><a href="index.html">Budget</a></li>
+                    <li><a href="../">Budget</a></li>
                     <hr>
-                    <li><a href="journal.html">Journal</a></li>
+                    <li><a href="journal">Journal</a></li>
                     <hr>
-                    <li><a href="index.html">Tracker</a></li>
+                    <li><a href="../">Tracker</a></li>
                     <hr>
-                    <li><a href="index.html">To-do</a></li>
+                    <li><a href="../">To-do</a></li>
                     <hr>
                 </ul>
             </div>
         </aside>
 
         <main>
-            <div class="journal">
+
+            <div class="journal-form">
                 <h2>Your Journal</h2>
 
                 <!-- Journal entry form -->
+                <textarea id="journal-title" rows="1" placeholder="Name your entry here..."> </textarea>
                 <textarea id="journal-entry" rows="10" placeholder="Write your thoughts here..."></textarea>
                 <button id="save-journal">Save Entry</button>
                 <p id="status-message"></p>
+            </div>
 
+            <div class="journal">
                 <!-- Journal entries -->
                 <div id="old-entries" class="old-entries">
                     <h3>Previous Entries</h3>
                     <!-- Old entries here -->
                 </div>
-
             </div>
+            
         </main>
 
         <footer>

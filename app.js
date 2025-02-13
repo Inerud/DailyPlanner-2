@@ -78,7 +78,7 @@ app.use(express.json());
 
 // API route to add a new journal entry
 app.post("/api/journal", (req, res) => {
-  const { entry } = req.body;
+  const { entryTitle, entry } = req.body;
   const auth0Id = req.oidc.user.sub; // Get the Auth0 ID
 
   // Get the user's ID from your database
@@ -87,8 +87,8 @@ app.post("/api/journal", (req, res) => {
       return res.status(500).json({ success: false, message: "Failed to retrieve user ID." });
     }
 
-    const query = 'INSERT INTO journal_entries (user_id, entry) VALUES (?, ?)';
-    db.query(query, [userId, entry], (err, results) => {
+    const query = 'INSERT INTO journal_entries (user_id, entry_title, entry) VALUES (?, ?, ?)';
+    db.query(query, [userId, entryTitle, entry], (err, results) => {
       if (err) {
         console.error("Error saving journal entry:", err);
         return res.status(500).json({ success: false, message: "Failed to save journal entry." });
@@ -109,7 +109,7 @@ app.get("/api/journal", (req, res) => {
       }
 
       // Fetch all journal entries for the user
-      const query = 'SELECT id, entry, created_at FROM journal_entries WHERE user_id = ? ORDER BY created_at DESC';
+      const query = 'SELECT id, entry_title, entry, created_at FROM journal_entries WHERE user_id = ? ORDER BY created_at DESC';
       db.query(query, [userId], (err, results) => {
           if (err) {
               console.error("Error fetching journal entries:", err);
