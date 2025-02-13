@@ -4,18 +4,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const saveButton = document.getElementById("save-journal");
     const statusMessage = document.getElementById("status-message");
     const oldEntriesDiv = document.getElementById("old-entries");
+    const editButton = document.getElementById("edit-journal");
+    const editModal = document.getElementById("editModal");
+    const closeModal = document.getElementById("closeModal");
+    const editEntryText = document.getElementById("editEntryText");
+    const saveEditButton = document.getElementById("saveEditButton");
 
+    let currentEntryId = null;
 
     // Load saved journal entry from the database when the page loads
     fetchEntries();
 
     // Save journal entry to localStorage
     saveButton.addEventListener("click", async function () {
-        const entryTitle = journalTitle.value.trim();
+        let entryTitle = journalTitle.value.trim();
         const entryText = journalEntry.value.trim();
 
-        if (entryTitle == "") {
-            entryTitle = getDate();
+        if (entryTitle === "") {
+            entryTitle = new Date();
         }
 
         if (entryText) {
@@ -37,6 +43,30 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 2000);
     });
 
+
+    editButton.addEventListener("click", async function() {
+        //IMPLEMENT WAY TO SELECT RIGHT ENTRY HERE
+    });
+
+    closeModal.addEventListener("click", closeEditModal);
+
+    saveEditButton.addEventListener("click", async function () {
+        if (currentEntryId) {
+            const updatedText = editEntryText.value.trim();
+            if (updatedText) {
+                const result = await updateEntry(currentEntryId, updatedText);
+                if (result.success) {
+                    alert("Entry updated successfully!");
+                    closeEditModal();
+                    fetchEntries(); // Refresh the entries list
+                } else {
+                    alert("Failed to update the entry.");
+                }
+            } else {
+                alert("Please enter some text to save.");
+            }
+        }
+    });
 
     async function addEntry(entryText, entryTitle) {
         try {
@@ -70,7 +100,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     entryDiv.innerHTML = `
                         <h4>${entry.entry_title}</h4>
                         <p>${entry.entry}</p>
-                        <p><small>Created at: ${entry.created_at}</small></p>`;
+                        <p><small>Created at: ${entry.created_at}</small></p>
+                        <button id="edit-journal">edit</button>`;
                     oldEntriesDiv.appendChild(entryDiv);
                 });
             }
@@ -105,6 +136,18 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error deleting journal entry:", error);
             return { success: false };
         }
+    }
+
+    function openEditModal(entryId, entryText) {
+        currentEntryId = entryId; 
+        editEntryText.value = entryText; 
+        editModal.style.display = "block";
+    }
+
+    function closeEditModal() {
+        editModal.style.display = "none"; 
+        currentEntryId = null; 
+        editEntryText.value = "";
     }
 
 });

@@ -1,0 +1,5 @@
+To run:
+Prerequesites: node
+
+npm install -> downloads all dependancies
+npm start -> runs the program
