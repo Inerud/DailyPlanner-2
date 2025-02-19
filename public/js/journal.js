@@ -51,11 +51,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 2000);
     });
 
-
-    editButton.addEventListener("click", async function() {
-        //IMPLEMENT WAY TO SELECT RIGHT ENTRY HERE
-    });
-
     closeModal.addEventListener("click", closeEditModal);
 
     saveEditButton.addEventListener("click", async function () {
@@ -100,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Display all previous entries in the 'old-entries' div
             if (data.entries && data.entries.length > 0) {
                 oldEntriesDiv.innerHTML = "<h3>Previous Entries</h3>";  // Reset previous entries header
-                
+
                 data.entries.forEach(entry => {
                     const entryDiv = document.createElement("div");
                     entryDiv.classList.add("journal-title-dis");
@@ -109,8 +104,17 @@ document.addEventListener("DOMContentLoaded", function () {
                         <h4>${entry.entry_title}</h4>
                         <p>${entry.entry}</p>
                         <p><small>Created at: ${entry.created_at}</small></p>
-                        <button id="edit-journal">edit</button>`;
+                        <button class="edit-entry-button" data-id="${entry.id}" data-text="${entry.entry}">Edit</button>`;
                     oldEntriesDiv.appendChild(entryDiv);
+                });
+
+                // Add event listeners to all edit buttons
+                document.querySelectorAll('.edit-entry-button').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const entryId = this.getAttribute('data-id');
+                        const entryText = this.getAttribute('data-text');
+                        openEditModal(entryId, entryText);
+                    });
                 });
             }
         } catch (error) {
@@ -147,14 +151,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function openEditModal(entryId, entryText) {
-        currentEntryId = entryId; 
-        editEntryText.value = entryText; 
+        currentEntryId = entryId;
+        editEntryText.value = entryText;
         editModal.style.display = "block";
     }
 
     function closeEditModal() {
-        editModal.style.display = "none"; 
-        currentEntryId = null; 
+        editModal.style.display = "none";
+        currentEntryId = null;
         editEntryText.value = "";
     }
 

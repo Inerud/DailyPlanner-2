@@ -2,14 +2,13 @@ const express = require("express");
 const { auth } = require("express-openid-connect");
 require("dotenv").config();
 const path = require("path");
-const mysql = require("mysql2");
 const db = require("./server/config/db.js");
 
 const app = express();
 const PORT = process.env.PORT;
 
 // Auth0 Configuration
-const config = {
+const authConfig = {
   authRequired: false,
   auth0Logout: true,
   secret: process.env.AUTH0_SECRET,
@@ -18,166 +17,123 @@ const config = {
   issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,
 };
 
-// Use Auth0 middleware
-app.use(auth(config));
-
-// Serve static files
+// Middleware
+app.use(auth(authConfig));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json());
 
 // Test database connection
 db.connect((err) => {
-  if (err) {
-    console.error("Database connection failed:", err);
-  } else {
-    console.log("Connected to MySQL database.");
-  }
+  if (err) console.error("Database connection failed:", err);
+  else console.log("Connected to MySQL database.");
 });
 
-// Function to check if user exists and insert if not
-function saveUserIfNotExists(user, callback) {
-  const query = 'SELECT id FROM users WHERE auth0_id = ?';
-  db.query(query, [user.sub], (err, results) => {
-    if (err) {
-      console.error('Error checking user:', err);
-      return callback(err);
-    }
-    if (results.length === 0) {
-      const insertQuery = 'INSERT INTO users (auth0_id, email, name) VALUES (?, ?, ?)';
-      db.query(insertQuery, [user.sub, user.email, user.name], (err, results) => {
-        if (err) {
-          console.error('Error inserting user:', err);
-          return callback(err);
-        }
-        console.log('User saved to database:', user.name);
-        callback(null, results.insertId); // Return the new user's ID
+// ** Helper function to get or create a user **
+const getOrCreateUser = async (user) => {
+  return new Promise((resolve, reject) => {
+    const query = "SELECT id FROM users WHERE auth0_id = ?";
+    db.query(query, [user.sub], (err, results) => {
+      if (err) return reject(err);
+      if (results.length > 0) return resolve(results[0].id);
+
+      // Insert new user if not found
+      const insertQuery = "INSERT INTO users (auth0_id, email, name) VALUES (?, ?, ?)";
+      db.query(insertQuery, [user.sub, user.email, user.name], (err, result) => {
+        if (err) return reject(err);
+        console.log("User saved:", user.name);
+        resolve(result.insertId);
       });
-    } else {
-      callback(null, results[0].id); // Return the existing user's ID
-    }
-  });
-}
-
-// API route for user data
-app.get("/api/user", (req, res) => {
-  if (req.oidc.isAuthenticated()) {
-    saveUserIfNotExists(req.oidc.user, (err, userId) => {
-      if (err) {
-        console.error('Error saving user:', err);
-        return res.status(500).json({ error: 'Failed to save user' });
-      }
-      console.log('User ID:', userId);
-      res.json({ user: req.oidc.user });
     });
-  } else {
-    res.json({ user: null });
+  });
+};
+
+// ** Middleware to check authentication and get user ID **
+const authenticateUser = async (req, res, next) => {
+  if (!req.oidc.isAuthenticated()) return res.status(401).json({ success: false, message: "Unauthorized" });
+
+  try {
+    req.userId = await getOrCreateUser(req.oidc.user);
+    next();
+  } catch (error) {
+    console.error("Error authenticating user:", error);
+    res.status(500).json({ success: false, message: "Authentication failed" });
   }
+};
+
+// ** API Routes **
+
+// Get authenticated user data
+app.get("/api/user", authenticateUser, (req, res) => {
+  res.json({ user: req.oidc.user });
 });
 
-// Middleware to parse JSON bodies
-app.use(express.json());
-
-// API route to add a new journal entry
-app.post("/api/journal", (req, res) => {
+// Add a new journal entry
+app.post("/api/journal", authenticateUser, (req, res) => {
   const { entryTitle, entry } = req.body;
-  const auth0Id = req.oidc.user.sub; // Get the Auth0 ID
+  if (!entryTitle || !entry) return res.status(400).json({ success: false, message: "Title and entry required" });
 
-  // Get the user's ID from your database
-  saveUserIfNotExists(req.oidc.user, (err, userId) => {
+  const query = "INSERT INTO journal_entries (user_id, entry_title, entry) VALUES (?, ?, ?)";
+  db.query(query, [req.userId, entryTitle, entry], (err) => {
     if (err) {
-      return res.status(500).json({ success: false, message: "Failed to retrieve user ID." });
+      console.error("Error saving journal entry:", err);
+      return res.status(500).json({ success: false, message: "Failed to save entry" });
     }
-
-    const query = 'INSERT INTO journal_entries (user_id, entry_title, entry) VALUES (?, ?, ?)';
-    db.query(query, [userId, entryTitle, entry], (err, results) => {
-      if (err) {
-        console.error("Error saving journal entry:", err);
-        return res.status(500).json({ success: false, message: "Failed to save journal entry." });
-      }
-      res.json({ success: true, message: "Journal entry saved!" });
-    });
+    res.json({ success: true, message: "Journal entry saved!" });
   });
 });
 
-// API route to fetch all journal entries for the user
-app.get("/api/journal", (req, res) => {
-  const auth0Id = req.oidc.user.sub; // Get the Auth0 ID
-
-  // Get the user's ID from the database
-  saveUserIfNotExists(req.oidc.user, (err, userId) => {
-      if (err) {
-          return res.status(500).json({ success: false, message: "Failed to retrieve user ID." });
-      }
-
-      // Fetch all journal entries for the user
-      const query = 'SELECT id, entry_title, entry, created_at FROM journal_entries WHERE user_id = ? ORDER BY created_at DESC';
-      db.query(query, [userId], (err, results) => {
-          if (err) {
-              console.error("Error fetching journal entries:", err);
-              return res.status(500).json({ success: false, message: "Failed to fetch journal entries." });
-          }
-
-          if (results.length > 0) {
-              res.json({ entries: results });
-          } else {
-              res.json({ entries: [] });
-          }
-      });
+// Fetch all journal entries for the user
+app.get("/api/journal", authenticateUser, (req, res) => {
+  const query = "SELECT id, entry_title, entry, created_at FROM journal_entries WHERE user_id = ? ORDER BY created_at DESC";
+  db.query(query, [req.userId], (err, results) => {
+    if (err) {
+      console.error("Error fetching journal entries:", err);
+      return res.status(500).json({ success: false, message: "Failed to fetch entries" });
+    }
+    res.json({ entries: results });
   });
 });
 
-
-// API route to update a journal entry
-app.put("/api/journal/:id", (req, res) => {
-  const entryId = req.params.id;
+// Update a journal entry
+app.put("/api/journal/:id", authenticateUser, (req, res) => {
+  const { id } = req.params;
   const { entry } = req.body;
-  const userId = req.oidc.user.sub; // Get the authenticated user's ID from Auth0
+  if (!entry) return res.status(400).json({ success: false, message: "Entry required" });
 
-  if (!entry) {
-    return res.status(400).json({ success: false, message: "Journal entry is required." });
-  }
-
-  const query = 'UPDATE journal_entries SET entry = ? WHERE id = ? AND user_id = ?';
-  db.query(query, [entry, entryId, userId], (err, results) => {
+  const query = "UPDATE journal_entries SET entry = ? WHERE id = ? AND user_id = ?";
+  db.query(query, [entry, id, req.userId], (err, result) => {
     if (err) {
       console.error("Error updating journal entry:", err);
-      return res.status(500).json({ success: false, message: "Failed to update journal entry." });
+      return res.status(500).json({ success: false, message: "Failed to update entry" });
     }
+    if (result.affectedRows === 0) return res.status(404).json({ success: false, message: "Entry not found" });
+
     res.json({ success: true, message: "Journal entry updated!" });
   });
 });
 
-// API route to delete a journal entry
-app.delete("/api/journal/:id", (req, res) => {
-  const entryId = req.params.id;
-  const userId = req.oidc.user.sub; // Get the authenticated user's ID from Auth0
+// Delete a journal entry
+app.delete("/api/journal/:id", authenticateUser, (req, res) => {
+  const { id } = req.params;
 
-  const query = 'DELETE FROM journal_entries WHERE id = ? AND user_id = ?';
-  db.query(query, [entryId, userId], (err, results) => {
+  const query = "DELETE FROM journal_entries WHERE id = ? AND user_id = ?";
+  db.query(query, [id, req.userId], (err, result) => {
     if (err) {
       console.error("Error deleting journal entry:", err);
-      return res.status(500).json({ success: false, message: "Failed to delete journal entry." });
+      return res.status(500).json({ success: false, message: "Failed to delete entry" });
     }
+    if (result.affectedRows === 0) return res.status(404).json({ success: false, message: "Entry not found" });
+
     res.json({ success: true, message: "Journal entry deleted!" });
   });
 });
 
+// ** Static Pages **
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "views", "index.html")));
+app.get("/journal", (req, res) => res.sendFile(path.join(__dirname, "views", "journal.html")));
 
-// Serve the main HTML page
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "index.html"));
-});
+// ** Logout Route **
+app.get("/logout", (req, res) => res.oidc.logout({ returnTo: process.env.AUTH0_BASE_URL }));
 
-// Serve journal.html
-app.get("/journal", (req, res) => {
-  res.sendFile(path.join(__dirname, "views", "journal.html"));
-})
-
-// Logout route (Redirects to Auth0)
-app.get("/logout", (req, res) => {
-  res.oidc.logout({ returnTo: process.env.AUTH0_BASE_URL });
-});
-
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// ** Start Server **
+app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
