@@ -4,25 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
-    <title>Daily Planner</title>
+    <title>Journal - Daily Planner</title>
     <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/todo.css">
 </head>
 
 <body>
     <div class="container">
         <header>
-            <h1 id="greeting">Good Morning!</h1>
-            <div id="auth-section">
-                <a href="/login" class="btn btn-primary">Login</a>
-            </div>
+            <h1>To-do</h1>
+            <a href="../">Back to Home</a>
         </header>
 
         <aside>
-            <div class="tools">
+            <div class="nav">
                 <ul>
                     <hr>
                     <li><a href="../">Meal planner</a></li>
@@ -42,27 +37,6 @@
         </aside>
 
         <main>
-
-
-            <div class="exercise">
-                <h1>Daily Exercise</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris malesuada facilisis eros, sed
-                    eleifend
-                    augue accumsan eget.</p>
-                <a href="journal.html">Journal</a>
-                <a href="habits.html">Habits</a>
-            </div>
-
-            <div class="todo">
-                <h1>Today's agenda</h1>
-                <ul id="task-list">
-                    <li>Coffee</li>
-                    <li>Tea</li>
-                    <li>Milk</li>
-                </ul>
-                <a href="index.html">View tomorrow</a>
-            </div>
-
             <div class="calendar">
                 <div class="month">
                     <span class="prev">&#10094;</span>
@@ -80,6 +54,14 @@
                 </ul>
                 <ul class="days" id="days"></ul>
             </div>
+
+            <div class="todo">
+                <h1>Today's agenda</h1>
+                <ul id="task-list">
+                </ul>
+                <a href="index.html">View tomorrow</a>
+            </div>
+
         </main>
 
         <footer>
@@ -87,9 +69,9 @@
         </footer>
     </div>
 
-    <script src="/js/main.js"></script>
     <script src="/js/calendar.js"></script>
     <script src="/js/todo.js"></script>
+
 </body>
 
 </html>

@@ -1,3 +1,8 @@
+    //TO-DO: finish edit
+    //add image/file saving
+    //styling
+    //add sorting to entries
+
 document.addEventListener("DOMContentLoaded", function () {
     const journalTitle = document.getElementById("journal-title");
     const journalEntry = document.getElementById("journal-entry");
@@ -9,14 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeModal = document.getElementById("closeModal");
     const editEntryText = document.getElementById("editEntryText");
     const saveEditButton = document.getElementById("saveEditButton");
-
-    //TO-DO: finish edit
-    //add delete
-    //add image/file saving
-    //styling
-    //add sorting to entries
-    //
-
 
     let currentEntryId = null;
 
@@ -104,7 +101,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         <h4>${entry.entry_title}</h4>
                         <p>${entry.entry}</p>
                         <p><small>Created at: ${entry.created_at}</small></p>
-                        <button class="edit-entry-button" data-id="${entry.id}" data-text="${entry.entry}">Edit</button>`;
+                        <button class="edit-entry-button" data-id="${entry.id}" data-text="${entry.entry}">Edit</button>
+                        <button class="delete-entry-button" data-id="${entry.id}" ">Delete</button>`;
+                        
                     oldEntriesDiv.appendChild(entryDiv);
                 });
 
@@ -114,6 +113,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         const entryId = this.getAttribute('data-id');
                         const entryText = this.getAttribute('data-text');
                         openEditModal(entryId, entryText);
+                    });
+                });
+
+                // Add event listeners to all delete buttons
+                document.querySelectorAll('.delete-entry-button').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const entryId = this.getAttribute('data-id');
+                        deleteEntry(entryId);
                     });
                 });
             }

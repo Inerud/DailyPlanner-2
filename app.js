@@ -128,9 +128,26 @@ app.delete("/api/journal/:id", authenticateUser, (req, res) => {
   });
 });
 
+// Todo 
+app.get("/api/todo", authenticateUser, (req, res) => {
+  const { date } = req.query;
+  if (!date) return res.status(400).json({ success: false, message: "Date is required." });
+
+  const query = "SELECT id, task, completed FROM todo WHERE user_id = ? AND task_date = ?";
+  db.query(query, [req.userId, date], (err, results) => {
+      if (err) {
+          console.error("Error fetching to-do list:", err);
+          return res.status(500).json({ success: false, message: "Failed to fetch to-do list." });
+      }
+      res.json({ success: true, todos: results });
+  });
+});
+
+
 // ** Static Pages **
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "views", "index.html")));
 app.get("/journal", (req, res) => res.sendFile(path.join(__dirname, "views", "journal.html")));
+app.get("/todo", (req, res) => res.sendFile(path.join(__dirname, "views", "todo.html")));
 
 // ** Logout Route **
 app.get("/logout", (req, res) => res.oidc.logout({ returnTo: process.env.AUTH0_BASE_URL }));

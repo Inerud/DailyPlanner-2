@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const nextBtn = document.querySelector(".next");
 
     let currentDate = new Date();
+    let selectedDate = new Date(); // Default to today
 
     function renderCalendar(date) {
         daysContainer.innerHTML = ""; // Clear previous days
@@ -34,11 +35,22 @@ document.addEventListener("DOMContentLoaded", function () {
             const dayLi = document.createElement("li");
             dayLi.textContent = day;
 
+            const dayDate = new Date(year, month, day);
+            const formattedDay = dayDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+
             // Highlight today's date
             const today = new Date();
             if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
                 dayLi.classList.add("today");
             }
+
+            // Highlight selected date
+            if (formattedDay === selectedDate.toISOString().split("T")[0]) {
+                dayLi.classList.add("selected");
+            }
+
+            // Add click event to select a date
+            dayLi.addEventListener("click", () => selectDate(dayDate));
 
             daysContainer.appendChild(dayLi);
         }
@@ -54,6 +66,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Function to handle date selection
+    function selectDate(date) {
+        selectedDate = date;
+
+        // Re-render calendar to apply selection highlight
+        renderCalendar(currentDate);
+
+        // Dispatch a custom event with the selected date
+        document.dispatchEvent(new CustomEvent("dateSelected", { detail: selectedDate }));
+    }
+
     // Navigation Buttons
     prevBtn.addEventListener("click", function () {
         currentDate.setMonth(currentDate.getMonth() - 1);
@@ -67,4 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initial render
     renderCalendar(currentDate);
+
+    // Automatically select today on page load
+    selectDate(selectedDate);
 });
