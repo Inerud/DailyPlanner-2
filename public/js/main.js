@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       if (data.user) {
           greeting.textContent = `Good Morning, ${data.user.name}!`;
-          authSection.innerHTML = `<a href="/logout" class="btn btn-danger">Logout</a>`;
+          authSection.innerHTML = `<a href="/account"> Account</a>`
+          authSection.innerHTML = `<a href="/account"> Account</a> <a href="/logout" class="btn btn-danger">Logout</a>`;
       } else {
           authSection.innerHTML = `<a href="/login" class="btn btn-primary">Login</a>`;
       }

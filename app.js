@@ -143,11 +143,92 @@ app.get("/api/todo", authenticateUser, (req, res) => {
   });
 });
 
+app.post("/api/todo", authenticateUser, (req, res) => {
+  const { task, task_date } = req.body;
+  if (!task || !task_date) {
+      return res.status(400).json({ success: false, message: "Task and date are required." });
+  }
+
+  const query = "INSERT INTO todo (user_id, task, task_date) VALUES (?, ?, ?)";
+  db.query(query, [req.userId, task, task_date], (err, result) => {
+      if (err) {
+          console.error("Error adding task:", err);
+          return res.status(500).json({ success: false, message: "Failed to add task." });
+      }
+      res.json({ success: true, message: "Task added!", taskId: result.insertId });
+  });
+});
+
+app.put("/api/todo/:id", authenticateUser, (req, res) => {
+  const { id } = req.params;
+  const { completed } = req.body;
+
+  if (typeof completed === "undefined") {
+      return res.status(400).json({ success: false, message: "Completed status is required." });
+  }
+
+  const query = "UPDATE todo SET completed = ? WHERE id = ? AND user_id = ?";
+  db.query(query, [completed, id, req.userId], (err, result) => {
+      if (err) {
+          console.error("Error updating task completion:", err);
+          return res.status(500).json({ success: false, message: "Failed to update task." });
+      }
+
+      if (result.affectedRows === 0) {
+          return res.status(404).json({ success: false, message: "Task not found or not authorized." });
+      }
+
+      res.json({ success: true, message: "Task updated successfully." });
+  });
+});
+
+//Account
+app.get("/api/account", authenticateUser, (req, res) => {
+  const query = "SELECT name, email FROM users WHERE id = ?";
+  
+  db.query(query, [req.userId], (err, results) => {
+      if (err) {
+          console.error("Error fetching user data:", err);
+          return res.status(500).json({ success: false, message: "Failed to fetch user data." });
+      }
+
+      if (results.length === 0) {
+          return res.status(404).json({ success: false, message: "User not found." });
+      }
+
+      res.json({ success: true, user: results[0] });
+  });
+});
+
+app.put("/api/account", authenticateUser, (req, res) => {
+  const { name, email } = req.body;
+  
+  if (!name || !email) {
+      return res.status(400).json({ success: false, message: "Name and email are required." });
+  }
+
+  const query = "UPDATE users SET name = ?, email = ? WHERE id = ?";
+  
+  db.query(query, [name, email, req.userId], (err, result) => {
+      if (err) {
+          console.error("Error updating user data:", err);
+          return res.status(500).json({ success: false, message: "Failed to update account details." });
+      }
+
+      if (result.affectedRows === 0) {
+          return res.status(404).json({ success: false, message: "User not found." });
+      }
+
+      res.json({ success: true, message: "Account details updated successfully!" });
+  });
+});
+
 
 // ** Static Pages **
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "views", "index.html")));
 app.get("/journal", (req, res) => res.sendFile(path.join(__dirname, "views", "journal.html")));
 app.get("/todo", (req, res) => res.sendFile(path.join(__dirname, "views", "todo.html")));
+app.get("/account", (req, res) => res.sendFile(path.join(__dirname, "views", "account.html")));
 
 // ** Logout Route **
 app.get("/logout", (req, res) => res.oidc.logout({ returnTo: process.env.AUTH0_BASE_URL }));
