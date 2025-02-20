@@ -5,12 +5,14 @@
 //display all tasks
 //add priority?
 //add recurring?
-
+//differenciate between event and task
+//add "reward" for completing
 
 document.addEventListener("DOMContentLoaded", () => {
     const taskList = document.getElementById("task-list");
     const newTaskInput = document.getElementById("new-task");
     const addTaskBtn = document.getElementById("add-task-btn");
+
 
     let selectedDate = new Date(); //default to today
 
@@ -32,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             data.todos.forEach(todo => {
                 const li = document.createElement("li");
-                
+
                 //create checkbox
                 const checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
@@ -96,13 +98,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // Listen for button click to add a task
+    if (newTaskInput && addTaskBtn) {
+        // Listen for button click to add a task
     addTaskBtn.addEventListener("click", addTask);
 
     // Listen for "Enter" key in input field
     newTaskInput.addEventListener("keypress", (event) => {
         if (event.key === "Enter") addTask();
     });
+    }
 
     // Listen for calendar date selection
     document.addEventListener("dateSelected", (event) => {

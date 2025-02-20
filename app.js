@@ -230,6 +230,7 @@ app.get("/journal", (req, res) => res.sendFile(path.join(__dirname, "views", "jo
 app.get("/todo", (req, res) => res.sendFile(path.join(__dirname, "views", "todo.html")));
 app.get("/account", (req, res) => res.sendFile(path.join(__dirname, "views", "account.html")));
 
+
 // ** Logout Route **
 app.get("/logout", (req, res) => res.oidc.logout({ returnTo: process.env.AUTH0_BASE_URL }));
 
