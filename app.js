@@ -67,6 +67,7 @@ app.get("/api/user", authenticateUser, (req, res) => {
   res.json({ user: req.oidc.user });
 });
 
+// ** Journal **
 // Add a new journal entry
 app.post("/api/journal", authenticateUser, (req, res) => {
   const { entryTitle, entry } = req.body;
@@ -128,98 +129,137 @@ app.delete("/api/journal/:id", authenticateUser, (req, res) => {
   });
 });
 
-// Todo 
+// ** Todo **
 app.get("/api/todo", authenticateUser, (req, res) => {
   const { date } = req.query;
   if (!date) return res.status(400).json({ success: false, message: "Date is required." });
 
-  const query = "SELECT id, task, completed FROM todo WHERE user_id = ? AND task_date = ?";
+  const query = "SELECT id, task, task_type, priority, repeat_option, task_date, completed FROM todo WHERE user_id = ? AND task_date = ? ORDER BY task_time ASC, priority DESC";
   db.query(query, [req.userId, date], (err, results) => {
-      if (err) {
-          console.error("Error fetching to-do list:", err);
-          return res.status(500).json({ success: false, message: "Failed to fetch to-do list." });
-      }
-      res.json({ success: true, todos: results });
+    if (err) {
+      console.error("Error fetching to-do list:", err);
+      return res.status(500).json({ success: false, message: "Failed to fetch to-do list." });
+    }
+    res.json({ success: true, todos: results });
   });
 });
 
 app.post("/api/todo", authenticateUser, (req, res) => {
-  const { task, task_date } = req.body;
+  const { task, task_type, priority, repeat_option, task_date, task_time } = req.body;
   if (!task || !task_date) {
-      return res.status(400).json({ success: false, message: "Task and date are required." });
+    return res.status(400).json({ success: false, message: "Task and date are required." });
   }
 
-  const query = "INSERT INTO todo (user_id, task, task_date) VALUES (?, ?, ?)";
-  db.query(query, [req.userId, task, task_date], (err, result) => {
+  const query = "INSERT INTO todo (user_id, task, task_type, priority, repeat_option, task_date, task_time) VALUES (?, ?, ?, ?, ?, ?, ?)";
+  db.query(
+    query,
+    [req.userId, task, task_type || 'todo', priority || 'medium', repeat_option || 'none', task_date, task_time || null],
+    (err, result) => {
       if (err) {
-          console.error("Error adding task:", err);
-          return res.status(500).json({ success: false, message: "Failed to add task." });
+        console.error("Error adding task:", err);
+        return res.status(500).json({ success: false, message: "Failed to add task." });
       }
       res.json({ success: true, message: "Task added!", taskId: result.insertId });
-  });
+    }
+  );
 });
 
 app.put("/api/todo/:id", authenticateUser, (req, res) => {
   const { id } = req.params;
-  const { completed } = req.body;
+  const { task, task_type, priority, repeat_option, task_date, task_time, completed } = req.body;
 
-  if (typeof completed === "undefined") {
-      return res.status(400).json({ success: false, message: "Completed status is required." });
+  if (completed === undefined && !task && !task_type && !priority && !repeat_option && !task_date && !task_time) {
+    return res.status(400).json({ success: false, message: "No update fields provided." });
   }
 
-  const query = "UPDATE todo SET completed = ? WHERE id = ? AND user_id = ?";
-  db.query(query, [completed, id, req.userId], (err, result) => {
-      if (err) {
-          console.error("Error updating task completion:", err);
-          return res.status(500).json({ success: false, message: "Failed to update task." });
-      }
+  let query = "UPDATE todo SET ";
+  let values = [];
+  let updates = [];
 
-      if (result.affectedRows === 0) {
-          return res.status(404).json({ success: false, message: "Task not found or not authorized." });
-      }
+  if (task) {
+    updates.push("task = ?");
+    values.push(task);
+  }
+  if (task_type) {
+    updates.push("task_type = ?");
+    values.push(task_type);
+  }
+  if (priority) {
+    updates.push("priority = ?");
+    values.push(priority);
+  }
+  if (repeat_option) {
+    updates.push("repeat_option = ?");
+    values.push(repeat_option);
+  }
+  if (task_date) {
+    updates.push("task_date = ?");
+    values.push(task_date);
+  }
+  if (task_time !== undefined) {  // Allow clearing time (set to null)
+    updates.push("task_time = ?");
+    values.push(task_time || null);
+  }
+  if (completed !== undefined) {
+    updates.push("completed = ?");
+    values.push(completed);
+  }
 
-      res.json({ success: true, message: "Task updated successfully." });
+  query += updates.join(", ") + " WHERE id = ? AND user_id = ?";
+  values.push(id, req.userId);
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error updating task:", err);
+      return res.status(500).json({ success: false, message: "Failed to update task." });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: "Task not found or not authorized." });
+    }
+
+    res.json({ success: true, message: "Task updated successfully." });
   });
 });
+
 
 //Account
 app.get("/api/account", authenticateUser, (req, res) => {
   const query = "SELECT name, email FROM users WHERE id = ?";
-  
+
   db.query(query, [req.userId], (err, results) => {
-      if (err) {
-          console.error("Error fetching user data:", err);
-          return res.status(500).json({ success: false, message: "Failed to fetch user data." });
-      }
+    if (err) {
+      console.error("Error fetching user data:", err);
+      return res.status(500).json({ success: false, message: "Failed to fetch user data." });
+    }
 
-      if (results.length === 0) {
-          return res.status(404).json({ success: false, message: "User not found." });
-      }
+    if (results.length === 0) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
 
-      res.json({ success: true, user: results[0] });
+    res.json({ success: true, user: results[0] });
   });
 });
 
 app.put("/api/account", authenticateUser, (req, res) => {
   const { name, email } = req.body;
-  
+
   if (!name || !email) {
-      return res.status(400).json({ success: false, message: "Name and email are required." });
+    return res.status(400).json({ success: false, message: "Name and email are required." });
   }
 
   const query = "UPDATE users SET name = ?, email = ? WHERE id = ?";
-  
+
   db.query(query, [name, email, req.userId], (err, result) => {
-      if (err) {
-          console.error("Error updating user data:", err);
-          return res.status(500).json({ success: false, message: "Failed to update account details." });
-      }
+    if (err) {
+      console.error("Error updating user data:", err);
+      return res.status(500).json({ success: false, message: "Failed to update account details." });
+    }
 
-      if (result.affectedRows === 0) {
-          return res.status(404).json({ success: false, message: "User not found." });
-      }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
 
-      res.json({ success: true, message: "Account details updated successfully!" });
+    res.json({ success: true, message: "Account details updated successfully!" });
   });
 });
 

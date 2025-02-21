@@ -10,14 +10,36 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     const taskList = document.getElementById("task-list");
-    const newTaskInput = document.getElementById("new-task");
+    const todotitle = document.getElementById("todotitle");
+
     const addTaskBtn = document.getElementById("add-task-btn");
+    const openModalBtn = document.getElementById("open-modal-btn");
+    const modal = document.getElementById("addTaskModal");
+    const closeModalBtn = document.querySelector(".close");
+    const saveTaskBtn = document.getElementById("saveTaskBtn");
+
+    const taskType = document.getElementById("taskType");
+    const taskText = document.getElementById("taskText");
+    const priority = document.getElementById("priority");
+    const repeat = document.getElementById("repeat");
 
 
-    let selectedDate = new Date(); //default to today
+    let selectedDate = new Date(); // Default to today
 
     function formatDate(date) {
         return date.toISOString().split("T")[0];
+    }
+
+    function openModal() {
+        modal.style.display = "block";
+    }
+
+    function closeModal() {
+        modal.style.display = "none";
+        taskText.value = "";
+        taskType.value = "todo";
+        priority.value = "low";
+        repeat.value = "none";
     }
 
     async function fetchTodos(date) {
@@ -25,6 +47,25 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch(`/api/todo?date=${date}`);
             const data = await response.json();
 
+            if (todotitle) {
+                const today = new Date();
+                const tomorrow = new Date();
+                tomorrow.setDate(today.getDate() + 1);
+            
+                const selectedDateObj = new Date(date);
+                const formattedDate = selectedDateObj.toLocaleDateString();
+            
+                // Compare dates without time
+                if (selectedDateObj.toDateString() === today.toDateString()) {
+                    todotitle.textContent = "Agenda for Today";
+                } else if (selectedDateObj.toDateString() === tomorrow.toDateString()) {
+                    todotitle.textContent = "Agenda for Tomorrow";
+                } else {
+                    todotitle.textContent = `Agenda for ${formattedDate}`;
+                }
+            }
+
+            if (!taskList) return;
             taskList.innerHTML = ""; // Clear previous tasks
 
             if (!data.success || data.todos.length === 0) {
@@ -35,17 +76,17 @@ document.addEventListener("DOMContentLoaded", () => {
             data.todos.forEach(todo => {
                 const li = document.createElement("li");
 
-                //create checkbox
+                // Create checkbox
                 const checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
                 checkbox.checked = todo.completed === 1;
                 checkbox.addEventListener("change", () => toggleTaskCompletion(todo.id, checkbox.checked));
 
-                //create task text
+                // Create task text
                 const taskText = document.createElement("span");
                 taskText.textContent = todo.task;
                 if (todo.completed) {
-                    taskText.style.textDecoration = "line-through"; // Strike through completed tasks
+                    taskText.style.textDecoration = "line-through";
                 }
 
                 li.appendChild(checkbox);
@@ -57,29 +98,40 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // add a new task
     async function addTask() {
-        const taskText = newTaskInput.value.trim();
-        if (!taskText) return alert("Please enter a task.");
+        const taskTextValue = taskText.value.trim();
+        const taskTypeValue = taskType.value;
+        const priorityValue = priority.value;
+        const repeatValue = repeat.value;
+
+        if (!taskTextValue) {
+            alert("Please enter a task.");
+            return;
+        }
 
         try {
             const response = await fetch("/api/todo", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ task: taskText, task_date: formatDate(selectedDate) }),
+                body: JSON.stringify({
+                    task: taskTextValue,
+                    task_type: taskTypeValue,
+                    priority: priorityValue,
+                    repeat: repeatValue,
+                    task_date: formatDate(selectedDate)
+                }),
             });
 
             const data = await response.json();
             if (!data.success) throw new Error(data.message);
 
-            newTaskInput.value = ""; // Clear input
-            fetchTodos(formatDate(selectedDate)); // Refresh tasks
+            closeModal();
+            fetchTodos(formatDate(selectedDate));
         } catch (error) {
             console.error("Error adding task:", error);
         }
     }
 
-    // complete toggle
     async function toggleTaskCompletion(taskId, isCompleted) {
         try {
             const response = await fetch(`/api/todo/${taskId}`, {
@@ -91,29 +143,33 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
             if (!data.success) throw new Error(data.message);
 
-            fetchTodos(formatDate(selectedDate)); // Refresh tasks
+            fetchTodos(formatDate(selectedDate));
         } catch (error) {
             console.error("Error updating task completion:", error);
         }
     }
 
-
-    if (newTaskInput && addTaskBtn) {
-        // Listen for button click to add a task
-    addTaskBtn.addEventListener("click", addTask);
-
-    // Listen for "Enter" key in input field
-    newTaskInput.addEventListener("keypress", (event) => {
-        if (event.key === "Enter") addTask();
-    });
+    if (taskText && addTaskBtn) {
+        addTaskBtn.addEventListener("click", addTask);
+        taskText.addEventListener("keypress", (event) => {
+            if (event.key === "Enter") addTask();
+        });
     }
 
-    // Listen for calendar date selection
     document.addEventListener("dateSelected", (event) => {
-        selectedDate = event.detail; // Update the selected date
-        fetchTodos(formatDate(selectedDate)); // Fetch tasks for the new date
+        console.log("Date selected event received:", event.detail);
+        selectedDate = event.detail;
+        fetchTodos(formatDate(selectedDate));
     });
 
-    // Fetch to-dos for today's date initially
     fetchTodos(formatDate(selectedDate));
+
+    // Event listeners
+    openModalBtn.addEventListener("click", openModal);
+    closeModalBtn.addEventListener("click", closeModal);
+    saveTaskBtn.addEventListener("click", addTask);
+
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) closeModal();
+    });
 });

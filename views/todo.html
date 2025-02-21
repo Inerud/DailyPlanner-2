@@ -56,14 +56,11 @@
             </div>
 
             <div class="todo">
-                <h1>Agenda</h1>
-                <ul id="task-list">
-                </ul>
+                <h1 id="todotitle">Agenda</h1>
+                <ul id="task-list"></ul>
 
-                <div class="add-task">
-                    <input type= "text" id="new-task" placeholder="Add a new task..." />
-                    <button id="add-task-btn">Add Task</button>
-                </div>
+                <button id="open-modal-btn"> Open </button>
+                <button id="add-task-btn"> Add Task </button>
             </div>
 
         </main>
@@ -71,6 +68,39 @@
         <footer>
             <p>Contact svl19@uni.brighton.ac.uk</p>
         </footer>
+    </div>
+
+    <div id="addTaskModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Task</h2>
+    
+            <label for="taskType">Type:</label>
+            <select id="taskType">
+                <option value="todo">To-Do</option>
+                <option value="event">Event</option>
+            </select>
+    
+            <label for="taskText">Task:</label>
+            <input type="text" id="taskText" placeholder="Enter task/event">
+    
+            <label for="priority">Priority:</label>
+            <select id="priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+    
+            <label for="repeat">Repeat:</label>
+            <select id="repeat">
+                <option value="none">None</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+            </select>
+    
+            <button id="saveTaskBtn">Save Task</button>
+        </div>
     </div>
 
     <script src="/js/calendar.js"></script>

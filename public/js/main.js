@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     //randomise exercise every day
 
   } catch (error) {
-    
+    console.error("Error fetching exercise data:", error);
   }
 
 
