@@ -75,20 +75,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
             data.todos.forEach(todo => {
                 const li = document.createElement("li");
-
+            
                 // Create checkbox
                 const checkbox = document.createElement("input");
                 checkbox.type = "checkbox";
                 checkbox.checked = todo.completed === 1;
                 checkbox.addEventListener("change", () => toggleTaskCompletion(todo.id, checkbox.checked));
-
+            
                 // Create task text
                 const taskText = document.createElement("span");
                 taskText.textContent = todo.task;
                 if (todo.completed) {
                     taskText.style.textDecoration = "line-through";
                 }
-
+            
+                // Create task time if available
+                if (todo.task_time) {
+                    const taskTime = document.createElement("span");
+                    taskTime.textContent = ` @ ${todo.task_time}`;
+                    taskText.appendChild(taskTime);
+                }
+            
                 li.appendChild(checkbox);
                 li.appendChild(taskText);
                 taskList.appendChild(li);
@@ -103,12 +110,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const taskTypeValue = taskType.value;
         const priorityValue = priority.value;
         const repeatValue = repeat.value;
-
+        const taskTimeValue = document.getElementById("taskTime").value; // Get the time value
+    
         if (!taskTextValue) {
             alert("Please enter a task.");
             return;
         }
-
+    
         try {
             const response = await fetch("/api/todo", {
                 method: "POST",
@@ -118,13 +126,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     task_type: taskTypeValue,
                     priority: priorityValue,
                     repeat: repeatValue,
-                    task_date: formatDate(selectedDate)
+                    task_date: formatDate(selectedDate),
+                    task_time: taskTimeValue || null  // Send time if provided, otherwise null
                 }),
             });
-
+    
             const data = await response.json();
             if (!data.success) throw new Error(data.message);
-
+    
             closeModal();
             fetchTodos(formatDate(selectedDate));
         } catch (error) {
