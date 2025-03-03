@@ -8,6 +8,7 @@
     <title>Home - Daily Planner</title>
     <link rel="stylesheet" href="/css/style.css">
 </head> 
+
 <body>
     <div class="container">
         <header class="header">
@@ -25,7 +26,7 @@
                 </div>
             </div>
             <div class="subtitle2">
-                <span>Good Morning user!</span>
+                <span id="greeting">Good Morning user!</span>
             </div>
         </header>
 
@@ -49,7 +50,7 @@
 
             <ul class="account">
                 <hr>
-                <li><span> <a href="../">manage account</a> </span> <span class="logout"><a href="../">logout</a></span>
+                <li></span> <span id="auth-section"><a href="/login">login</a></span>
                 </li>
                 <hr>
             </ul>
@@ -160,7 +161,7 @@
         </footer>
     </div>
 
-    
+    <script src="/js/main.js"></script>
 </body>
 
 </html>

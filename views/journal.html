@@ -57,10 +57,12 @@
             <div class="title">
                 <h2>New Entry</h2>
             </div>
-            <form class="journalform">
+            <form class="journal-form">
                 <label>title: </label>
-                <input type="text" class="titleinput">
-                <input type="text" class="entryinput">
+                <input type="text" id="journal-title" rows="1" class="titleinput">
+                <input type="text" id="journal-entry" class="entryinput">
+                <button id="save-journal">Save Entry</button>
+                <span id="status-message"></span>
             </form>
         </section>
 
@@ -91,6 +93,8 @@
             <p>Contact: svl19@uni.brighton.ac.uk</p>
         </footer>
     </div>
+
+    <script src="/js/journal.js"></script>
 </body>
 
 </html>

@@ -1,6 +1,5 @@
     //TO-DO: finish edit
     //add image/file saving
-    //styling
     //add sorting to entries
 
 document.addEventListener("DOMContentLoaded", function () {

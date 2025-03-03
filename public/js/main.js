@@ -3,7 +3,7 @@
 document.addEventListener("DOMContentLoaded", async function () {
   const authSection = document.getElementById("auth-section");
   const greeting = document.getElementById("greeting");
-  const exercise = document.getElementById("exerciseContainer");
+  const challenge = document.getElementById("challengetext");
 
   try {
       const response = await fetch("/api/account");
