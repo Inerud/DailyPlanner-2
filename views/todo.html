@@ -4,111 +4,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Journal - Daily Planner</title>
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/todo.css">
 </head>
 
 <body>
     <div class="container">
-        <header>
-            <h1>To-do</h1>
-            <a href="../">Back to Home</a>
+        <header class="header">
+            <div class="pagetitle">
+                <h1 id="title">To-Dos</h1>
+            </div>
+            <div class="flower">
+                <img src="poppy.png" alt="Sunflower">
+            </div>
+            <div class="subtitle">
+                <span>Tuesday 25.02.2025</span>
+                <div class="arrows">
+                </div>
+            </div>
+            <div class="subtitle2">
+                <span><a href="home">back to homepage</a></span>
+            </div>
         </header>
 
-        <aside>
-            <div class="nav">
-                <ul>
-                    <hr>
-                    <li><a href="../">Meal planner</a></li>
-                    <hr>
-                    <li><a href="../">Habits</a></li>
-                    <hr>
-                    <li><a href="../">Budget</a></li>
-                    <hr>
-                    <li><a href="journal">Journal</a></li>
-                    <hr>
-                    <li><a href="../">Tracker</a></li>
-                    <hr>
-                    <li><a href="todo">To-do</a></li>
-                    <hr>
-                </ul>
-            </div>
+        <aside class="tools">
+          <ul>
+            <li><a href="habits">Habits</a></li>
+            <hr>
+            <li><a href="mealplanner">Meal Planner</a></li>
+            <hr>
+            <li><a href="journal">Journal</a></li>
+            <hr>
+            <li><a href="../">Tracker</a></li>
+            <hr>
+            <li><a href="todo">To-do</a></li>
+            <hr>
+            <li><a href="../">Calendar</a></li>
+            <hr>
+            <li><a href="../">Notes</a></li>
+            <hr>
+        </ul>
+
+            <ul class="account">
+                <hr>
+                <li><span> <a href="../">manage account</a> </span> <span class="logout"><a href="../">logout</a></span>
+                </li>
+                <hr>
+            </ul>
         </aside>
 
-        <main>
-            <div class="calendar">
-                <div class="month">
-                    <span class="prev">&#10094;</span>
-                    <div id="monthYear"></div>
-                    <span class="next">&#10095;</span>
-                </div>
-                <ul class="weekdays">
-                    <li>Mo</li>
-                    <li>Tu</li>
-                    <li>We</li>
-                    <li>Th</li>
-                    <li>Fr</li>
-                    <li>Sa</li>
-                    <li>Su</li>
-                </ul>
-                <ul class="days" id="days"></ul>
-            </div>
+        <div class="todotable">
+            <table class="tg"><colgroup>
+                <col style="width: 34px">
+                <col style="width: 72px">
+                <col style="width: 77px">
+                <col style="width: 53px">
+                <col style="width: 187px">
+                <col style="width: 27px">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th class="tg-0lax">&nbsp;&nbsp;&nbsp;<br>No&nbsp;&nbsp;&nbsp;</th>
+                    <th class="tg-0lax">&nbsp;&nbsp;&nbsp;<br>Date&nbsp;&nbsp;&nbsp;</th>
+                    <th class="tg-0lax">&nbsp;&nbsp;&nbsp;<br>Priority&nbsp;&nbsp;&nbsp;</th>
+                    <th class="tg-0lax">&nbsp;&nbsp;&nbsp;<br>Time&nbsp;&nbsp;&nbsp;</th>
+                    <th class="tg-0lax">&nbsp;&nbsp;&nbsp;<br>To-do&nbsp;&nbsp;&nbsp;</th>
+                    <th class="tg-0lax">&nbsp;&nbsp;&nbsp;<br> &nbsp;&nbsp;&nbsp;</th>
+                  </tr></thead>
+                <tbody>
+                  <tr>
+                    <td class="tg-0lax">1</td>
+                    <td class="tg-0lax">25.02</td>
+                    <td class="tg-0lax">Low</td>
+                    <td class="tg-0lax">10:00</td>
+                    <td class="tg-0lax">Meeting </td>
+                    <td class="tg-0lax">Y</td>
+                  </tr>
+                  <tr>
+                    <td class="tg-0lax">2</td>
+                    <td class="tg-0lax">03.03</td>
+                    <td class="tg-0lax">Medium</td>
+                    <td class="tg-0lax">13:00</td>
+                    <td class="tg-0lax">Inspection</td>
+                    <td class="tg-0lax">N</td>
+                  </tr>
+                  <tr>
+                    <td class="tg-0lax">3</td>
+                    <td class="tg-0lax">04.03</td>
+                    <td class="tg-0lax">High</td>
+                    <td class="tg-0lax">09:30</td>
+                    <td class="tg-0lax">Go to salon</td>
+                    <td class="tg-0lax">Y</td>
+                  </tr>
+                  <tr>
+                    <td class="tg-0lax">4</td>
+                    <td class="tg-0lax">&nbsp;&nbsp;&nbsp;<br> &nbsp;&nbsp;&nbsp;</td>
+                    <td class="tg-0lax">&nbsp;&nbsp;&nbsp;<br> &nbsp;&nbsp;&nbsp;</td>
+                    <td class="tg-0lax">&nbsp;&nbsp;&nbsp;<br> &nbsp;&nbsp;&nbsp;</td>
+                    <td class="tg-0lax">&nbsp;&nbsp;&nbsp;<br> &nbsp;&nbsp;&nbsp;</td>
+                    <td class="tg-0lax">&nbsp;&nbsp;&nbsp;<br> &nbsp;&nbsp;&nbsp;</td>
+                  </tr>
+                </tbody></table>
+        </div>
+        <div class="buttons">
+            <button>Save</button>
+            <button>+</button>
+        </div>
 
-            <div class="todo">
-                <h1 id="todotitle">Agenda</h1>
-                <ul id="task-list"></ul>
+        
 
-                <button id="open-modal-btn"> Add task </button>
-            </div>
-
-        </main>
-
-        <footer>
-            <p>Contact svl19@uni.brighton.ac.uk</p>
+        <footer class="footer">
+            <p>Contact: svl19@uni.brighton.ac.uk</p>
         </footer>
     </div>
-
-    <div id="addTaskModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Add New Task</h2>
-    
-            <label for="taskType">Type:</label>
-            <select id="taskType">
-                <option value="todo">To-Do</option>
-                <option value="event">Event</option>
-            </select>
-    
-            <label for="taskText">Task:</label>
-            <input type="text" id="taskText" placeholder="Enter task/event">
-    
-            <label for="priority">Priority:</label>
-            <select id="priority">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-            </select>
-
-            <label for="taskTime">Time:</label>
-            <input type="time" id="taskTime" />
-
-    
-            <label for="repeat">Repeat:</label>
-            <select id="repeat">
-                <option value="none">None</option>
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-            </select>
-    
-            <button id="saveTaskBtn">Save Task</button>
-        </div>
-    </div>
-
-    <script src="/js/calendar.js"></script>
-    <script src="/js/todo.js"></script>
-
 </body>
 
 </html>

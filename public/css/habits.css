@@ -1,0 +1,29 @@
+.habittable {
+    grid-column: 1 / 6;
+    grid-row: 2 / 2;
+
+    width: 100%;
+    height: fit-content;
+    overflow-x: auto; /* Enables horizontal scrolling */
+    
+    white-space: nowrap; /* Ensures the table stays in a single horizontal line */
+}
+
+.habittable table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.habittable th, 
+.habittable td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+    min-width: 25px;
+}
+
+.habittable th {
+    background-color: lightgray;
+    font-weight: bold;
+}

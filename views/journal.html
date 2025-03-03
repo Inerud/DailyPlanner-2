@@ -4,75 +4,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Journal - Daily Planner</title>
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/journal.css">
 </head>
 
 <body>
     <div class="container">
-        <header>
-            <h1>Journal</h1>
-            <a href="../">Back to Home</a>
+        <header class="header">
+            <div class="pagetitle">
+                <h1 id="title">Journal</h1>
+            </div>
+            <div class="flower">
+                <img src="/images/poppy.png" alt="Orchid">
+            </div>
+            <div class="subtitle">
+                <span></span>
+                <div class="arrows">
+                </div>
+            </div>
+            <div class="subtitle2">
+                <span><a href="home">back to homepage</a></span>
+            </div>
         </header>
 
-        <aside>
-            <div class="nav">
-                <ul>
-                    <hr>
-                    <li><a href="../">Meal planner</a></li>
-                    <hr>
-                    <li><a href="../">Habits</a></li>
-                    <hr>
-                    <li><a href="../">Budget</a></li>
-                    <hr>
-                    <li><a href="journal">Journal</a></li>
-                    <hr>
-                    <li><a href="../">Tracker</a></li>
-                    <hr>
-                    <li><a href="todo">To-do</a></li>
-                    <hr>
-                </ul>
-            </div>
+        <aside class="tools">
+            <ul>
+                <li><a href="habits">Habits</a></li>
+                <hr>
+                <li><a href="mealplanner">Meal Planner</a></li>
+                <hr>
+                <li><a href="journal">Journal</a></li>
+                <hr>
+                <li><a href="../">Tracker</a></li>
+                <hr>
+                <li><a href="todo">To-do</a></li>
+                <hr>
+                <li><a href="../">Calendar</a></li>
+                <hr>
+                <li><a href="../">Notes</a></li>
+                <hr>
+            </ul>
+
+            <ul class="account">
+                <hr>
+                <li><span> <a href="../">manage account</a> </span> <span class="logout"><a href="../">logout</a></span>
+                </li>
+                <hr>
+            </ul>
         </aside>
 
-        <main>
+        <section class="newentry">
+            <div class="title">
+                <h2>New Entry</h2>
+            </div>
+            <form class="journalform">
+                <label>title: </label>
+                <input type="text" class="titleinput">
+                <input type="text" class="entryinput">
+            </form>
+        </section>
 
-            <div class="journal-form">
-                <h2>Your Journal</h2>
-
-                <!-- Journal entry form -->
-                <textarea id="journal-title" rows="1" placeholder="Name your entry here..."> </textarea>
-                <textarea id="journal-entry" rows="10" placeholder="Write your thoughts here..."></textarea>
-                <button id="save-journal">Save Entry</button>
-                <p id="status-message"></p>
+        <section class="oldentries">
+            <div class="menu"> <button>sort by:</button></div>
+            <h2 class="monthheading">February</h2>
+            <div class="oldentry">
+                <div class="date"> 24 </div>
+                <div class="entry">Donec porttitor diam a lorem feugiat, in commodo dui auctor. Vivamus eu iaculis erat,
+                    id posuere mi. Quisque bibendum fermentum augue ut ornare. Quisque euismod congue nulla. In vehicula
+                    euismod elit eget facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+                    inceptos himenaeos. </div>
             </div>
 
-            <div class="journal">
-                <!-- Journal entries -->
-                <div id="old-entries" class="old-entries">
-                    <h3>Previous Entries</h3>
-                    <!-- Old entries here -->
-                </div>
+            <div class="oldentry">
+                <div class="date"> 19 </div>
+                <div class="entry"> Integer molestie dignissim risus et aliquam. Praesent commodo erat sed justo porta,
+                    sed maximus lorem dictum. Pellentesque et purus nisl. Sed et orci non erat rutrum dictum. Vivamus
+                    sed ligula bibendum, fringilla tellus ac, efficitur purus. Orci varius natoque penatibus et magnis
+                    dis parturient montes, nascetur ridiculus mus. Aenean posuere, erat vitae mattis aliquam, elit purus
+                    convallis eros, vitae porttitor odio lacus eget ligula. Cras maximus, turpis sed fringilla
+                    tristique, orci erat ornare sapien, vel egestas ante nulla vel lorem. </div>
             </div>
 
-            <div id="editModal" class="modal">
-                <div class="modal-content">
-                    <span id="closeModal" class="close">&times;</span>
-                    <h2>Edit Journal Entry</h2>
-                    <textarea id="editEntryText" rows="10" placeholder="Edit your journal entry..."></textarea>
-                    <button id="saveEditButton">Save Changes</button>
-                </div>
-            </div>
+        </section>
 
-        </main>
-
-        <footer>
-            <p>Contact svl19@uni.brighton.ac.uk</p>
+        <footer class="footer">
+            <p>Contact: svl19@uni.brighton.ac.uk</p>
         </footer>
     </div>
-
-    <script src="/js/journal.js"></script>
 </body>
 
 </html>

@@ -266,9 +266,12 @@ app.put("/api/account", authenticateUser, (req, res) => {
 
 // ** Static Pages **
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "views", "index.html")));
+app.get("/home", (req, res) => res.sendFile(path.join(__dirname, "views", "home.html")));
 app.get("/journal", (req, res) => res.sendFile(path.join(__dirname, "views", "journal.html")));
 app.get("/todo", (req, res) => res.sendFile(path.join(__dirname, "views", "todo.html")));
 app.get("/account", (req, res) => res.sendFile(path.join(__dirname, "views", "account.html")));
+app.get("/habits", (req, res) => res.sendFile(path.join(__dirname, "views", "habits.html")));
+app.get("/mealplanner", (req, res) => res.sendFile(path.join(__dirname, "views", "mealplanner.html")));
 
 
 // ** Logout Route **

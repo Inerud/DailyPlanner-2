@@ -1,0 +1,45 @@
+.container{
+
+}
+
+.todotable{
+    grid-column: 1 / 6;
+    grid-row: 2 / 2;
+}
+.tg {
+    border-spacing: 30px;
+    width: 100%;
+}
+
+.tg td {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 14px;
+    overflow: hidden;
+    padding: 10px 5px;
+    word-break: normal;
+    background-color: antiquewhite;
+}
+
+.tg th {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 14px;
+    font-weight: normal;
+    overflow: hidden;
+    padding: 10px 5px;
+    word-break: normal;
+}
+
+.tg .tg-0lax {
+    text-align: left;
+    vertical-align: top
+}
+
+.buttons {
+    grid-column: 1 / 6;
+    float: right;
+    margin-left: auto;
+}

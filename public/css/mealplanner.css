@@ -1,0 +1,95 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, auto);
+    gap: 8px;
+}
+
+.header {
+    grid-column: span 7 / span 7;
+    grid-column-start: 1;
+    grid-row-start: 1;
+}
+
+.MondayHead {
+    grid-column-start: 1;
+    grid-row-start: 2;
+}
+
+.TuesdayHead {
+    grid-column-start: 2;
+    grid-row-start: 2;
+}
+
+.WednesdayHead {
+    grid-column-start: 3;
+    grid-row-start: 2;
+}
+
+.ThursdayHead {
+    grid-column-start: 4;
+    grid-row-start: 2;
+}
+
+.FridayHead {
+    grid-column-start: 5;
+    grid-row-start: 2;
+}
+
+.SaturdayHead {
+    grid-column-start: 6;
+    grid-row-start: 2;
+}
+
+.Sundayhead {
+    grid-column-start: 7;
+    grid-row-start: 2;
+}
+
+.MondayCont {
+    grid-row: span 3 / span 3;
+    grid-column-start: 1;
+    grid-row-start: 3;
+}
+
+.TuesdayCont {
+    grid-row: span 3 / span 3;
+    grid-column-start: 2;
+    grid-row-start: 3;
+}
+
+.WednesdayCont {
+    grid-row: span 3 / span 3;
+    grid-column-start: 3;
+    grid-row-start: 3;
+}
+
+.ThursdayCont {
+    grid-row: span 3 / span 3;
+    grid-column-start: 4;
+    grid-row-start: 3;
+}
+
+.FridayCont {
+    grid-row: span 3 / span 3;
+    grid-column-start: 5;
+    grid-row-start: 3;
+}
+
+.SaturdayCont {
+    grid-row: span 3 / span 3;
+    grid-column-start: 6;
+    grid-row-start: 3;
+}
+
+.SundayCont {
+    grid-row: span 3 / span 3;
+    grid-column-start: 7;
+    grid-row-start: 3;
+}
+
+.footer {
+    grid-column: span 7 / span 7;
+    grid-column-start: 1;
+    grid-row-start: 6;
+}

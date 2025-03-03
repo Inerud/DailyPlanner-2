@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal - Daily Planner</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/oldjournal.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Journal</h1>
+            <a href="home">Back to Home</a>
+        </header>
+
+        <aside>
+            <div class="nav">
+                 <ul>
+                <li><a href="habits">Habits</a></li>
+                <hr>
+                <li><a href="mealplanner">Meal Planner</a></li>
+                <hr>
+                <li><a href="journal">Journal</a></li>
+                <hr>
+                <li><a href="../">Tracker</a></li>
+                <hr>
+                <li><a href="todo">To-do</a></li>
+                <hr>
+                <li><a href="../">Calendar</a></li>
+                <hr>
+                <li><a href="../">Notes</a></li>
+                <hr>
+            </ul>
+            </div>
+        </aside>
+
+        <main>
+
+            <div class="journal-form">
+                <h2>Your Journal</h2>
+
+                <!-- Journal entry form -->
+                <textarea id="journal-title" rows="1" placeholder="Name your entry here..."> </textarea>
+                <textarea id="journal-entry" rows="10" placeholder="Write your thoughts here..."></textarea>
+                <button id="save-journal">Save Entry</button>
+                <p id="status-message"></p>
+            </div>
+
+            <div class="journal">
+                <!-- Journal entries -->
+                <div id="old-entries" class="old-entries">
+                    <h3>Previous Entries</h3>
+                    <!-- Old entries here -->
+                </div>
+            </div>
+
+            <div id="editModal" class="modal">
+                <div class="modal-content">
+                    <span id="closeModal" class="close">&times;</span>
+                    <h2>Edit Journal Entry</h2>
+                    <textarea id="editEntryText" rows="10" placeholder="Edit your journal entry..."></textarea>
+                    <button id="saveEditButton">Save Changes</button>
+                </div>
+            </div>
+
+        </main>
+
+        <footer>
+            <p>Contact svl19@uni.brighton.ac.uk</p>
+        </footer>
+    </div>
+
+    <script src="/js/journal.js"></script>
+</body>
+
+</html>
