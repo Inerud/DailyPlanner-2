@@ -69,3 +69,13 @@
 .menu{
     float: right;
 }
+
+.edit-input {
+    background-color: #EEE2DC;
+    width: 100%; 
+    height: auto;
+    padding: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+

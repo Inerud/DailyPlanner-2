@@ -8,11 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const saveButton = document.getElementById("save-journal");
     const statusMessage = document.getElementById("status-message");
     const oldEntriesDiv = document.getElementById("oldentries");
-    const editButton = document.getElementById("edit-journal");
-    const editModal = document.getElementById("editModal");
-    const closeModal = document.getElementById("closeModal");
-    const editEntryText = document.getElementById("editEntryText");
-    const saveEditButton = document.getElementById("saveEditButton");
 
     let currentEntryId = null;
 
@@ -46,26 +41,6 @@ document.addEventListener("DOMContentLoaded", function () {
             statusMessage.textContent = "";
         }, 2000);
     });
-
-    //closeModal.addEventListener("click", closeEditModal);
-
-    // saveEditButton.addEventListener("click", async function () {
-    //     if (currentEntryId) {
-    //         const updatedText = editEntryText.value.trim();
-    //         if (updatedText) {
-    //             const result = await updateEntry(currentEntryId, updatedText);
-    //             if (result.success) {
-    //                 alert("Entry updated successfully!");
-    //                 closeEditModal();
-    //                 fetchEntries(); // Refresh the entries list
-    //             } else {
-    //                 alert("Failed to update the entry.");
-    //             }
-    //         } else {
-    //             alert("Please enter some text to save.");
-    //         }
-    //     }
-    // });
 
     async function addEntry(entryText, entryTitle) {
         try {
@@ -132,15 +107,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                 });
 
-                // // Add event listeners to all edit buttons
-                // document.querySelectorAll('.edit-entry-button').forEach(button => {
-                //     button.addEventListener('click', function () {
-                //         const entryId = this.getAttribute('data-id');
-                //         const entryText = this.getAttribute('data-text');
-                //         openEditModal(entryId, entryText);
-                //     });
-                // });
-
                 // // Add event listeners to all delete buttons
                 // document.querySelectorAll('.delete-entry-button').forEach(button => {
                 //     button.addEventListener('click', function () {
@@ -154,26 +120,40 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function autoResizeTextarea(textarea) {
+        textarea.style.height = "auto"; // Reset height to recalculate
+        textarea.style.height = textarea.scrollHeight + "px"; // Set new height based on content
+    }
+
     // Function to make entry text editable
     function makeEntryEditable(element, entryId) {
         const currentText = element.textContent;
-        const inputField = document.createElement("input");
+        const textarea = document.createElement("textarea");
 
-        inputField.type = "text";
-        inputField.value = currentText;
-        inputField.classList.add("entry-input");
+        textarea.value = currentText;
+        textarea.classList.add("edit-input");
 
-        // Replace the text with an input field
-        element.replaceWith(inputField);
-        inputField.focus();
+        document.body.appendChild(textarea); // Temporarily add to measure height
+        autoResizeTextarea(textarea);
+        document.body.removeChild(textarea);
 
-        // Save changes on blur (clicking outside) or pressing Enter
-        inputField.addEventListener("blur", () => saveUpdatedEntry(inputField, entryId));
-        inputField.addEventListener("keypress", (e) => {
-            if (e.key === "Enter") {
-                saveUpdatedEntry(inputField, entryId);
+        // Adjust height dynamically as user types
+        textarea.addEventListener("input", function () {
+            autoResizeTextarea(this);
+        });
+
+        // Save on blur or Enter key press (Shift+Enter allows multi-line entry)
+        textarea.addEventListener("blur", () => saveUpdatedEntry(textarea, entryId));
+        textarea.addEventListener("keypress", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                saveUpdatedEntry(textarea, entryId);
             }
         });
+
+        // Replace the text with an input field
+        element.replaceWith(textarea);
+        textarea.focus();
     }
 
     // Function to save updated entry
@@ -207,22 +187,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    async function updateEntry(entryId, entryText) {
-        try {
-            const response = await fetch(`/api/journal/${entryId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ entry: entryText }),
-            });
-            return await response.json();
-        } catch (error) {
-            console.error("Error updating journal entry:", error);
-            return { success: false };
-        }
-    }
-
     async function deleteEntry(entryId) {
         try {
             const response = await fetch(`/api/journal/${entryId}`, {
@@ -234,17 +198,4 @@ document.addEventListener("DOMContentLoaded", function () {
             return { success: false };
         }
     }
-
-    function openEditModal(entryId, entryText) {
-        currentEntryId = entryId;
-        editEntryText.value = entryText;
-        editModal.style.display = "block";
-    }
-
-    function closeEditModal() {
-        editModal.style.display = "none";
-        currentEntryId = null;
-        editEntryText.value = "";
-    }
-
 });
