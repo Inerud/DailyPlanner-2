@@ -143,16 +143,19 @@ app.get("/api/todos", authenticateUser, (req, res) => {
   });
 });
 
-//insert new todo into database
+// insert new todo into database
 app.post("/api/todos", authenticateUser, (req, res) => {
-  const { title, due_date, due_time, priority, completed, tags } = req.body;
+  const { description, date, time, priority, completed, recurring, tags } = req.body;
 
-  if (!title || !due_date) {
-    return res.status(400).json({ success: false, message: "Title and due date are required" });
+  if (!description || !date) {
+    return res.status(400).json({ success: false, message: "Description and date are required" });
   }
 
-  const query = "INSERT INTO todos (user_id, title, due_date, due_time, priority, completed) VALUES (?, ?, ?, ?, ?, ?)";
-  const values = [req.userId, title, due_date, due_time || null, priority || "Low", completed || false];
+  const query = `
+    INSERT INTO todos (user_id, date, time, priority, description, completed, recurring)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+  const values = [req.userId, date, time || null, priority || "Low", description, completed || false, recurring || "None"];
 
   db.query(query, values, (err, result) => {
     if (err) {
@@ -165,7 +168,9 @@ app.post("/api/todos", authenticateUser, (req, res) => {
       const todoId = result.insertId;
       const tagValues = tags.map(tag => [todoId, tag]);
       db.query("INSERT INTO todo_tags (todo_id, tag) VALUES ?", [tagValues], (tagErr) => {
-        if (tagErr) console.error("Error adding tags:", tagErr);
+        if (tagErr) {
+          console.error("Error adding tags:", tagErr);
+        }
       });
     }
 
@@ -173,46 +178,67 @@ app.post("/api/todos", authenticateUser, (req, res) => {
   });
 });
 
-//update existing todo
+
+// update existing todo
 app.put("/api/todos/:id", authenticateUser, (req, res) => {
   const { id } = req.params;
-  const { title, due_date, due_time, priority, completed, tags } = req.body;
+  const { description, date, time, priority, completed, recurring, tags } = req.body;
 
-  const query = "UPDATE todos SET title = ?, due_date = ?, due_time = ?, priority = ?, completed = ? WHERE id = ? AND user_id = ?";
-  const values = [title, due_date, due_time || null, priority || "Low", completed || false, id, req.userId];
-
+  const query = `
+    UPDATE todos
+    SET description = ?, date = ?, time = ?, priority = ?, completed = ?, recurring = ?
+    WHERE id = ? AND user_id = ?
+  `;
+  const values = [description, date, time || null, priority || "Low", completed || false, recurring || "None", id, req.userId];
+  
   db.query(query, values, (err, result) => {
     if (err) {
       console.error("Error updating todo:", err);
       return res.status(500).json({ success: false, message: "Failed to update todo" });
     }
-    if (result.affectedRows === 0) return res.status(404).json({ success: false, message: "Todo not found" });
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: "Todo not found" });
+    }
 
     // Update tags if provided
     if (tags) {
+      // First, remove any existing tags for this todo
       db.query("DELETE FROM todo_tags WHERE todo_id = ?", [id], (delErr) => {
-        if (delErr) console.error("Error removing old tags:", delErr);
+        if (delErr) {
+          console.error("Error removing old tags:", delErr);
+          return res.status(500).json({ success: false, message: "Failed to update tags" });
+        }
         
         if (tags.length > 0) {
           const tagValues = tags.map(tag => [id, tag]);
           db.query("INSERT INTO todo_tags (todo_id, tag) VALUES ?", [tagValues], (tagErr) => {
-            if (tagErr) console.error("Error adding new tags:", tagErr);
+            if (tagErr) {
+              console.error("Error adding new tags:", tagErr);
+              return res.status(500).json({ success: false, message: "Failed to insert new tags" });
+            }
+            res.json({ success: true, message: "To-do updated!" });
           });
+        } else {
+          res.json({ success: true, message: "To-do updated, no tags provided!" });
         }
       });
+    } else {
+      res.json({ success: true, message: "To-do updated!" });
     }
-
-    res.json({ success: true, message: "To-do updated!" });
   });
 });
 
-//delete todo item
+
+// delete todo item
 app.delete("/api/todos/:id", authenticateUser, (req, res) => {
   const { id } = req.params;
 
   // First, delete associated tags
   db.query("DELETE FROM todo_tags WHERE todo_id = ?", [id], (tagErr) => {
-    if (tagErr) console.error("Error deleting tags:", tagErr);
+    if (tagErr) {
+      console.error("Error deleting tags:", tagErr);
+      // We log the error and continue to delete the todo item.
+    }
     
     // Now delete the todo item
     const query = "DELETE FROM todos WHERE id = ? AND user_id = ?";
@@ -221,12 +247,15 @@ app.delete("/api/todos/:id", authenticateUser, (req, res) => {
         console.error("Error deleting todo:", err);
         return res.status(500).json({ success: false, message: "Failed to delete todo" });
       }
-      if (result.affectedRows === 0) return res.status(404).json({ success: false, message: "Todo not found" });
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ success: false, message: "Todo not found" });
+      }
 
       res.json({ success: true, message: "To-do deleted!" });
     });
   });
 });
+
 
 
 
