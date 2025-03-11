@@ -61,9 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td class="to-do">${todo.description}</td>
                 <td class="tags">${todo.tags || "—"}</td>
                 <td class="done">
-                    <input type="checkbox" 
-                        ${todo.completed ? "checked" : ""} 
-                        onchange="toggleDone(${todo.id}, this.checked)">
+                    <input type="checkbox" class="todo-checkbox" data-id="${todo.id}" ${todo.done ? "checked" : ""}
+                    ${todo.completed ? "checked" : ""} >
                 </td>
                 <td class="edit">
                     <button class="editButton">Edit</button>
