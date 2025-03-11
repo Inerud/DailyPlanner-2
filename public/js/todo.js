@@ -3,15 +3,17 @@
 // Change color of finished tasks
 // DIfferent colors for different days? or priorities
 // Hide todos that are completed or low priority, and that are from yesterday or older
+// display sorting arrows
+// add symbols for edit, delete, and done
+// add a maximum of records shown at once
+// tag functionality
+// add user feedback for add (fill inn necessary fields)
 
 document.addEventListener("DOMContentLoaded", () => {
     const addButton = document.getElementById("addButton");
 
     let todos = []; // Store fetched todos
     let currentSort = { column: null, order: "asc" }; // Track sorting state
-
-
-
 
     async function fetchTodos() {
         try {
@@ -61,8 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td class="to-do">${todo.description}</td>
                 <td class="tags">${todo.tags || "—"}</td>
                 <td class="done">
-                    <input type="checkbox" class="todo-checkbox" data-id="${todo.id}" ${todo.done ? "checked" : ""}
-                    ${todo.completed ? "checked" : ""} >
+                    <input type="checkbox" class="todo-checkbox" data-id="${todo.id}" ${todo.completed ? "checked" : ""}>
                 </td>
                 <td class="edit">
                     <button class="editButton">Edit</button>
@@ -75,15 +76,114 @@ document.addEventListener("DOMContentLoaded", () => {
             row.querySelector(".editButton").addEventListener("click", function () {
                 toggleEdit(row, todo);
             });
+
+            // Attach event listener to the checkbox for toggling completion
+            row.querySelector(".todo-checkbox").addEventListener("change", function (event) {
+                const id = event.target.dataset.id;  // Get todo ID from data attribute
+                const isChecked = event.target.checked; // Get checkbox state
+                toggleDone(id, isChecked);  // Call toggle function
+            });
         });
+
     }
 
 
     addButton.addEventListener("click", async function () {
+        const tableBody = document.querySelector(".todotable tbody");
 
-    })
-    function addTodo() { };
-    function deleteTodo() { };
+        // Create a new row for adding a todo
+        const newRow = document.createElement("tr");
+        newRow.classList.add("editing"); // Add 'editing' class to style it
+        newRow.innerHTML = `
+        <td><input type="date" class="edit-date" value=""></td>
+        <td><input type="time" class="edit-time" value=""></td>
+        <td>
+            <select class="edit-priority">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
+        </td>
+        <td>
+            <select class="edit-recurring">
+                <option value="None">None</option>
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+            </select>
+        </td>
+        <td><input type="text" class="edit-description" placeholder="Enter task"></td>
+        <td><input type="text" class="edit-tags" placeholder="Tags (comma separated)"></td>
+        <td class="done">
+            <input type="checkbox" class="edit-done">
+        </td>
+        <td class="edit">
+            <button class="saveButton">Save</button>
+        </td>
+        `;
+
+        tableBody.appendChild(newRow);
+
+        // Attach event listener to Save button
+        newRow.querySelector(".saveButton").addEventListener("click", function () {
+            saveNewTodo(newRow);
+        });
+    });
+
+    async function saveNewTodo(row) {
+        const newTodo = {
+            date: row.querySelector(".edit-date").value,
+            time: row.querySelector(".edit-time").value,
+            priority: row.querySelector(".edit-priority").value,
+            recurring: row.querySelector(".edit-recurring").value,
+            description: row.querySelector(".edit-description").value,
+            tags: row.querySelector(".edit-tags").value,
+            completed: row.querySelector(".edit-done").checked,
+        };
+
+        try {
+            const response = await fetch("/api/todos", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newTodo),
+            });
+
+            const data = await response.json();
+
+            if (!data.success) {
+                console.error("Failed to add todo:", data.message);
+                return;
+            }
+
+            // Refresh the todo list after adding
+            fetchTodos();
+        } catch (error) {
+            console.error("Error adding todo:", error);
+        }
+    }
+
+    async function deleteTodo(todoId) {
+        if (!confirm("Are you sure you want to delete this to-do?")) return;
+
+        try {
+            const response = await fetch(`/api/todos/${todoId}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+            });
+
+            const data = await response.json();
+
+            if (!data.success) {
+                console.error("Failed to delete todo:", data.message);
+                return;
+            }
+
+            // Refresh the list after deletion
+            fetchTodos();
+        } catch (error) {
+            console.error("Error deleting todo:", error);
+        }
+    }
+
 
     async function toggleDone(id, isChecked) {
         try {
@@ -106,10 +206,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to toggle between Edit and Save mode
     function toggleEdit(row, todo) {
         const isEditing = row.classList.contains("editing");
-    
+
         if (!isEditing) {
             const formattedDate = todo.date ? todo.date.split("T")[0] : "";
-    
+
             row.innerHTML = `
                 <td><input type="date" class="edit-date" value="${formattedDate}"></td>
                 <td><input type="time" class="edit-time" value="${todo.time || ''}"></td>
@@ -136,21 +236,21 @@ document.addEventListener("DOMContentLoaded", () => {
                     <button class="saveButton">Save</button>
                 </td>
             `;
-    
+
             row.classList.add("editing");
-    
+
             // Attach event listener to Save button
             row.querySelector(".saveButton").addEventListener("click", function () {
                 saveEdit(row, todo.id);
             });
-    
+
             // Attach event listener to Delete button
             row.querySelector(".deleteButton").addEventListener("click", function () {
                 deleteTodo(todo.id);
             });
         }
     }
-    
+
 
     // Function to save edited data
     async function saveEdit(row, todoId) {
@@ -161,7 +261,6 @@ document.addEventListener("DOMContentLoaded", () => {
             recurring: row.querySelector(".edit-recurring").value,
             description: row.querySelector(".edit-description").value,
             tags: row.querySelector(".edit-tags").value,
-            completed: row.querySelector(".edit-done").checked,
         };
 
         try {
@@ -189,42 +288,42 @@ document.addEventListener("DOMContentLoaded", () => {
     //sorting 
     function sortTodos(column) {
         if (currentSort.column === column) {
-          currentSort.order = currentSort.order === "asc" ? "desc" : "asc"; // Toggle order
+            currentSort.order = currentSort.order === "asc" ? "desc" : "asc"; // Toggle order
         } else {
-          currentSort.column = column;
-          currentSort.order = "asc"; // Default to ascending
+            currentSort.column = column;
+            currentSort.order = "asc"; // Default to ascending
         }
-      
+
         todos.sort((a, b) => {
-          let valA = a[column];
-          let valB = b[column];
-      
-          // Handle different data types
-          if (column === "date") {
-            valA = new Date(valA).getTime() || 0;
-            valB = new Date(valB).getTime() || 0;
-          } else if (column === "priority") {
-            const priorityOrder = { High: 3, Medium: 2, Low: 1 };
-            valA = priorityOrder[valA] || 0;
-            valB = priorityOrder[valB] || 0;
-          } else if (column === "time") {
-            // Convert "HH:MM" to a number (e.g., "08:30" → 830)
-            valA = valA ? parseInt(valA.replace(":", ""), 10) : 0;
-            valB = valB ? parseInt(valB.replace(":", ""), 10) : 0;
-          } else {
-            // Convert to lowercase for case-insensitive sorting
-            valA = valA ? valA.toString().toLowerCase() : "";
-            valB = valB ? valB.toString().toLowerCase() : "";
-          }
-      
-          return currentSort.order === "asc"
-            ? valA > valB ? 1 : valA < valB ? -1 : 0
-            : valA < valB ? 1 : valA > valB ? -1 : 0;
+            let valA = a[column];
+            let valB = b[column];
+
+            // Handle different data types
+            if (column === "date") {
+                valA = new Date(valA).getTime() || 0;
+                valB = new Date(valB).getTime() || 0;
+            } else if (column === "priority") {
+                const priorityOrder = { High: 3, Medium: 2, Low: 1 };
+                valA = priorityOrder[valA] || 0;
+                valB = priorityOrder[valB] || 0;
+            } else if (column === "time") {
+                // Convert "HH:MM" to a number (e.g., "08:30" → 830)
+                valA = valA ? parseInt(valA.replace(":", ""), 10) : 0;
+                valB = valB ? parseInt(valB.replace(":", ""), 10) : 0;
+            } else {
+                // Convert to lowercase for case-insensitive sorting
+                valA = valA ? valA.toString().toLowerCase() : "";
+                valB = valB ? valB.toString().toLowerCase() : "";
+            }
+
+            return currentSort.order === "asc"
+                ? valA > valB ? 1 : valA < valB ? -1 : 0
+                : valA < valB ? 1 : valA > valB ? -1 : 0;
         });
-      
+
         displayTodos(todos);
-      }
-      
+    }
+
 
     function setUpSorting() {
         document.querySelectorAll(".todotable th").forEach(header => {
