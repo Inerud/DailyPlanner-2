@@ -139,9 +139,17 @@ app.get("/api/todos", authenticateUser, (req, res) => {
       console.error("Error fetching todos:", err);
       return res.status(500).json({ success: false, message: "Failed to fetch todos" });
     }
-    res.json({ success: true, todos: results });
+
+    // Convert completed field to boolean
+    const todos = results.map(todo => ({
+      ...todo,
+      completed: Boolean(todo.completed) // Ensures it's true/false
+    }));
+
+    res.json({ success: true, todos });
   });
 });
+
 
 // insert new todo into database
 app.post("/api/todos", authenticateUser, (req, res) => {
@@ -184,13 +192,44 @@ app.put("/api/todos/:id", authenticateUser, (req, res) => {
   const { id } = req.params;
   const { description, date, time, priority, completed, recurring, tags } = req.body;
 
-  const query = `
-    UPDATE todos
-    SET description = ?, date = ?, time = ?, priority = ?, completed = ?, recurring = ?
-    WHERE id = ? AND user_id = ?
-  `;
-  const values = [description, date, time || null, priority || "Low", completed || false, recurring || "None", id, req.userId];
-  
+  // Prepare fields to update dynamically
+  let updates = [];
+  let values = [];
+
+  if (description !== undefined) {
+    updates.push("description = ?");
+    values.push(description);
+  }
+  if (date !== undefined) {
+    updates.push("date = ?");
+    values.push(date);
+  }
+  if (time !== undefined) {
+    updates.push("time = ?");
+    values.push(time);
+  }
+  if (priority !== undefined) {
+    updates.push("priority = ?");
+    values.push(priority);
+  }
+  if (completed !== undefined) {
+    updates.push("completed = ?");
+    values.push(completed);
+  }
+  if (recurring !== undefined) {
+    updates.push("recurring = ?");
+    values.push(recurring);
+  }
+
+  // If no fields are provided, return an error
+  if (updates.length === 0) {
+    return res.status(400).json({ success: false, message: "No fields to update" });
+  }
+
+  // Construct final query
+  const query = `UPDATE todos SET ${updates.join(", ")} WHERE id = ? AND user_id = ?`;
+  values.push(id, req.userId);
+
   db.query(query, values, (err, result) => {
     if (err) {
       console.error("Error updating todo:", err);
@@ -202,13 +241,12 @@ app.put("/api/todos/:id", authenticateUser, (req, res) => {
 
     // Update tags if provided
     if (tags) {
-      // First, remove any existing tags for this todo
       db.query("DELETE FROM todo_tags WHERE todo_id = ?", [id], (delErr) => {
         if (delErr) {
           console.error("Error removing old tags:", delErr);
           return res.status(500).json({ success: false, message: "Failed to update tags" });
         }
-        
+
         if (tags.length > 0) {
           const tagValues = tags.map(tag => [id, tag]);
           db.query("INSERT INTO todo_tags (todo_id, tag) VALUES ?", [tagValues], (tagErr) => {
@@ -227,6 +265,7 @@ app.put("/api/todos/:id", authenticateUser, (req, res) => {
     }
   });
 });
+
 
 
 // delete todo item

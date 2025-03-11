@@ -42,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
       todos.forEach((todo, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td class="no">${index + 1}</td>
           <td class="date">${todo.date ? formatDate(todo.date) : "—"}</td>
           <td class="priority">${todo.priority || "Low"}</td>
           <td class="time">${todo.time || "—"}</td>
@@ -50,7 +49,9 @@ document.addEventListener("DOMContentLoaded", () => {
           <td class="to-do">${todo.description}</td>
           <td class="tags">${todo.tags || "—"}</td>
           <td class="done">
-            <input type="checkbox" class="todo-checkbox" data-id="${todo.id}" ${todo.done ? "checked" : ""}>
+          <input type="checkbox" 
+          ${todo.completed ? "checked" : ""} 
+          onchange="toggleDone(${todo.id}, this.checked)">
           </td>
           <td class="edit"><button class="editButton">Edit</button></td>
         `;
@@ -67,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
         checkbox.addEventListener("change", function () {
           try {
             if (!this.dataset.id) throw new Error("Missing todo ID");
-            console.log("Toggle event triggered for ID:", this.dataset.id);
             toggleDone(this.dataset.id, this.checked);
           } catch (error) {
             console.error("Error in checkbox event listener:", error);
@@ -86,23 +86,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-    async function toggleDone (id, isChecked){
+    async function toggleDone(id, isChecked) {
         try {
             const response = await fetch(`/api/todos/${id}`, {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ done: isChecked }),
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ completed: isChecked }),
             });
-        
+    
             const data = await response.json();
-        
+    
             if (!data.success) {
-              console.error("Failed to update todo status:", data.message);
+                console.error("Failed to update todo status:", data.message);
             }
-          } catch (error) {
+        } catch (error) {
             console.error("Error updating todo status:", error);
-          }
-    };
+        }
+    }
+    
 
     function sortTodos (){};
 
