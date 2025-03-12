@@ -1,4 +1,9 @@
 //add "reward" for completing exercise
+//mplement challenge
+//implement habits
+//fix styling
+//cross out finished todos in the chedule
+
 
 document.addEventListener("DOMContentLoaded", async function () {
   const dateDisplay = document.querySelector(".subtitle span");

@@ -1,4 +1,3 @@
-//TO-DO: finish edit
 //add image/file saving
 //add sorting to entries
 
