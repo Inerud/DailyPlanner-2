@@ -153,6 +153,32 @@ app.get("/api/todos", authenticateUser, (req, res) => {
   });
 });
 
+//fetch all todos for certain date
+app.get("/api/data", authenticateUser, (req, res) => {
+  const { date } = req.query; 
+
+  if (!date) {
+    return res.status(400).json({ success: false, message: "Date is required" });
+  }
+
+  const query = "SELECT * FROM todos WHERE user_id = ? AND DATE(date) = ? ORDER BY priority DESC, time";
+  
+  db.query(query, [req.userId, date], (err, results) => {
+    if (err) {
+      console.error("Error fetching todos for date:", err);
+      return res.status(500).json({ success: false, message: "Failed to fetch todos" });
+    }
+
+    const todos = results.map(todo => ({
+      ...todo,
+      completed: Boolean(todo.completed) // Ensures it's true/false
+    }));
+
+    res.json({ success: true, todos });
+  });
+});
+
+
 
 // insert new todo into database
 app.post("/api/todos", authenticateUser, (req, res) => {
