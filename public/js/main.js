@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       // Update schedule, habits, and todos
       updateTodos(data.todos || []);
+      updateSchedule(data.todos);
 
     } catch (error) {
       console.error("Error fetching data for selected date:", error);
@@ -128,6 +129,51 @@ document.addEventListener("DOMContentLoaded", async function () {
       todoList.appendChild(li);
     });
   }
+
+  function updateSchedule(todos) {
+    const scheduleRows = document.querySelectorAll(".schedule .tg tbody tr");
+
+    // Clear all previous events in the schedule
+    scheduleRows.forEach(row => {
+      const eventCell = row.querySelector(".event");
+      eventCell.textContent = ''; // Clear the event description
+    });
+
+    // Loop through each todo and place it in the corresponding schedule cell
+    todos.forEach(todo => {
+      const todoTime = new Date(`1970-01-01T${todo.time}Z`); // Create a Date object with only the time component
+      const todoHour = todoTime.getHours(); // Get the hour of the todo time
+
+      // Find the matching schedule row
+      const matchingRow = Array.from(scheduleRows).find(row => {
+        const timeRange = row.querySelector(".time").textContent.trim();
+        const [start, end] = timeRange.split('-');
+
+        // Extract hours from the time range
+        const [startHour, startPeriod] = start.split(' ');
+        const [endHour, endPeriod] = end.split(' ');
+
+        // Convert hours to integers
+        const startHourInt = parseInt(startHour);
+        const endHourInt = parseInt(endHour);
+
+        // Convert the 12-hour format to 24-hour format (AM/PM)
+        const startHour24 = (startPeriod === 'PM' && startHourInt !== 12) ? startHourInt + 12 : (startPeriod === 'AM' && startHourInt === 12 ? 0 : startHourInt);
+        const endHour24 = (endPeriod === 'PM' && endHourInt !== 12) ? endHourInt + 12 : (endPeriod === 'AM' && endHourInt === 12 ? 0 : endHourInt);
+
+        // Check if the todo hour falls within the time range
+        return todoHour >= startHour24 && todoHour < endHour24;
+      });
+
+      // If a matching row is found, place the event in the corresponding cell
+      if (matchingRow) {
+        const eventCell = matchingRow.querySelector(".event");
+        eventCell.textContent = todo.description; // Set the event description
+      }
+    });
+  }
+
+
 
 
   // Initialize display
