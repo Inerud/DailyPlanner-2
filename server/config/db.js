@@ -18,29 +18,4 @@ db.connect((err) => {
   console.log("MySQL Connected!");
 });
 
-// const execute = (sql, params, callBack) => {
-//   db.query(sql, params,(err, result) => {
-//     if (err) {
-//       return callBack(err, null);
-//     } else {
-//       callBack(null, "Success");
-//     }
-//   });
-// }
-
-// const query = (sql, params, callBack) => {   
-
-//   db.query(sql, params, (err, result) => {
-//       if (err) {
-//           callBack(err, null);                   
-//       } else {
-//           callBack(null, result);          
-//       }         
-//  }); 
-
-// }
-
-
 module.exports = db;
-// module.exports.execute = execute;
-// module.exports.query = query;
