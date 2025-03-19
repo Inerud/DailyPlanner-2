@@ -5,6 +5,11 @@ require_once 'auth0/src/Helpers/Token.php';
 require_once 'auth0/src/Store/SessionStore.php';
 require_once 'auth0/src/Configuration/SdkConfiguration.php';
 
+// Include the dependencies
+require_once 'vendor/firebase/src/JWT.php'; 
+require_once 'vendor/guzzle/src/Client.php'; 
+require_once 'vendor/symfony/HttpFoundation/Request.php';
+
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 
