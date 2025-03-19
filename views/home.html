@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <title>Home - Daily Planner</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="../public/css/style.css">
 </head> 
 
 <body>
@@ -16,7 +16,7 @@
                 <h1 id="title">Daily Planner</h1>
             </div>
             <div class="flower">
-                <img src="/images/Poppy.png" alt="Poppy">
+                <img src="../public/images/poppy.png" alt="Poppy">
             </div>
             <div class="subtitle">
                 <span>Tuesday 28, February 2025 </span>
@@ -32,25 +32,25 @@
 
         <aside class="tools">
             <ul>
-                <li><a href="habits">Habits</a></li>
+                <li><a href="../views/habits.html">Habits</a></li>
                 <hr>
-                <li><a href="mealplanner">Meal Planner</a></li>
+                <li><a href="../views/mealplanner.html">Meal Planner</a></li>
                 <hr>
-                <li><a href="journal">Journal</a></li>
+                <li><a href="../views/journal.html">Journal</a></li>
                 <hr>
-                <li><a href="../">Tracker</a></li>
+                <li><a href="../views/home.html">Tracker</a></li>
                 <hr>
-                <li><a href="todo">To-do</a></li>
+                <li><a href="../views/todo.html">To-do</a></li>
                 <hr>
-                <li><a href="../">Calendar</a></li>
+                <li><a href="../views/home.html">Calendar</a></li>
                 <hr>
-                <li><a href="../">Notes</a></li>
+                <li><a href="../views/home.html">Notes</a></li>
                 <hr>
             </ul>
 
             <ul class="account">
                 <hr>
-                <li></span> <span id="auth-section"><a href="/login">login</a></span>
+                <li></span> <span id="auth-section"><a href="../server/auth/auth.php">login</a></span>
                 </li>
                 <hr>
             </ul>
@@ -86,7 +86,7 @@
                     </tr>
                     <tr>
                         <td class="time">12-1 PM</td>
-                        <td class="event"> Doctors appointment</td>
+                        <td class="event"></td>
                     </tr>
                     <tr>
                         <td class="time">1-2 PM</td>
@@ -135,7 +135,7 @@
                 <!-- Todos dynamically added here -->
             </ul>
             <p id="noTodosMessage" style="display: none;">No tasks for today!</p>
-            <a href="todo">Show more</a>
+            <a href="../views/todo.html">Show more</a>
         </section>
 
         <section class="challenge">
@@ -160,8 +160,10 @@
         </footer>
     </div>
 
-    <script src="/js/main.js"></script>
-    <script src="/js/auth.js"> </script>
+    <script src="../public/js/main.js"></script>
+    <script src="../public/js/auth.js"> </script>
+    <script src="https://cdn.auth0.com/js/auth0/9.18/auth0.min.js"></script>
+
 </body>
 
 </html>

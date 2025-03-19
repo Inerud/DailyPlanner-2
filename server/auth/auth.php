@@ -1,26 +1,49 @@
 <?php
-// Include Auth0 SDK files
 require_once 'auth0/src/Auth0.php';
 require_once 'auth0/src/Helpers/JWTVerifier.php';
 require_once 'auth0/src/Helpers/Token.php';
 require_once 'auth0/src/Store/SessionStore.php';
-require_once 'auth0/scr/Configuration/SdkConfiguration.php';
+require_once 'auth0/src/Configuration/SdkConfiguration.php';
 
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 
+// Start session
+session_start();
+
 // Auth0 Configuration
 $auth0 = new Auth0([
-    'domain'        => (getenv('AUTH0_DOMAIN')),
-    'client_id'     => (getenv('AUTH0_CLIENT_ID')),
-    'client_secret' => (getenv('AUTH0_CLIENT_SECRET')),
-    'redirect_uri'  => (getenv('AUTH0_BASE_URL')),
+    'domain'        => getenv('AUTH0_DOMAIN'),
+    'client_id'     => getenv('AUTH0_CLIENT_ID'),
+    'client_secret' => getenv('AUTH0_CLIENT_SECRET'),
+    'redirect_uri'  => getenv('AUTH0_BASE_URL') . '/callback.php',
     'scope'         => 'openid profile email',
     'store'         => new \Auth0\SDK\Store\SessionStore(),
 ]);
 
-require_once "db.php";
-session_start();
+// Handle login
+if (isset($_GET['code'])) {
+    $userInfo = $auth0->getUser();
+    if ($userInfo) {
+        $_SESSION['user'] = $userInfo;
+        
+        // Store user in the database
+        require_once "db.php";
+        $user_id = getOrCreateUser($userInfo['sub'], $userInfo['email'], $userInfo['name']);
+        $_SESSION['user_id'] = $user_id;
+        
+        header("Location: /dashboard.php");
+        exit();
+    }
+}
+
+// Logout
+if (isset($_GET['logout'])) {
+    $auth0->logout();
+    session_destroy();
+    header("Location: /");
+    exit();
+}
 
 function authenticateUser()
 {
