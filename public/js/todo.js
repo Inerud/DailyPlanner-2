@@ -322,6 +322,29 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         displayTodos(todos);
+        updateArrows(column);
+    }
+
+    function updateArrows(sortedColumn) {
+        const headers = document.querySelectorAll(".todotable th");
+        
+        headers.forEach(header => {
+            const arrow = header.querySelector(".arrow");
+    
+            if (header.dataset.column === sortedColumn) {
+                // Update arrow direction based on the sort order
+                if (currentSort.order === "asc") {
+                    arrow.innerHTML = "&#11205;"; // Up arrow
+                } else {
+                    arrow.innerHTML = "&#11206;"; // Down arrow
+                }
+                header.classList.add("sorted");
+            } else {
+                // Remove arrow if the column is not sorted
+                arrow.innerHTML = "";
+                header.classList.remove("sorted");
+            }
+        });
     }
 
 
