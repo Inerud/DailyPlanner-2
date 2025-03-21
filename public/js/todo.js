@@ -31,25 +31,28 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Content-Type": "application/json",
                 },
             });
-
+    
             const data = await response.json();
-
+    
             if (!data.success) {
                 console.error("Failed to fetch todos:", data.message);
                 return;
             }
-
+    
+            // Assign fetched todos to the global todos array
+            todos = data.todos;
+    
             // Display main todos
             displayTodos(todos);
-
+    
             // Filter and display old todos (yesterday or older)
-            oldTodos = data.todos.filter(todo => new Date(todo.date) <= new Date(Date.now() - 86400000)); // Older than yesterday
+            oldTodos = data.todos.filter(todo => new Date(todo.date) <= new Date(Date.now() - 86400000));
             filterAndDisplayOldTodos();
-
+    
         } catch (error) {
             console.error("Error fetching todos:", error);
         }
-    };
+    }
 
     function displayTodos(todos) {
         const tableBody = document.querySelector(".todotable tbody");
