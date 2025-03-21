@@ -6,6 +6,16 @@
     grid-column: 1 / 6;
     grid-row: 2 / 2;
 }
+
+.old-todo-section{
+    grid-column: 1 / 6;
+    grid-row: 4 / 4;
+}
+
+.buttons{
+    grid-column: 6 / 6;
+    grid-row: 3 / 3;
+}
 .tg {
     border-spacing: 30px;
     width: 100%;

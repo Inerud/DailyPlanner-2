@@ -1,11 +1,9 @@
 //TODO LIST:
-// change date to today under date
-// Change color of finished tasks
-// DIfferent colors for different days? or priorities
-// Hide todos that are completed or low priority, and that are from yesterday or older
+// Change color of finished tasks and todays tasks
+// Different shades for priorities. Eg. Todays tasks different greens. Future tasks different shades of blue
 // add symbols for edit, delete, and done
 // add a maximum of records shown at once
-// tag functionality
+// tag functionality?
 // add user feedback for add (fill inn necessary fields)
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -78,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td class="priority">${todo.priority || "Low"}</td>
                 <td class="recurring">${todo.recurring || "None"}</td>
                 <td class="to-do">${todo.description}</td>
-                <td class="tags">${todo.tags || "—"}</td>
+                <!-- <td class="tags">${todo.tags || "—"}</td> -->
                 <td class="done">
                     <input type="checkbox" class="todo-checkbox" data-id="${todo.id}" ${todo.completed ? "checked" : ""}>
                 </td>
@@ -153,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
             priority: row.querySelector(".edit-priority").value,
             recurring: row.querySelector(".edit-recurring").value,
             description: row.querySelector(".edit-description").value,
-            tags: row.querySelector(".edit-tags").value,
+             // tags: row.querySelector(".edit-tags").value,
             completed: row.querySelector(".edit-done").checked,
         };
 
@@ -277,7 +275,7 @@ document.addEventListener("DOMContentLoaded", () => {
             time: row.querySelector(".edit-time").value,
             recurring: row.querySelector(".edit-recurring").value,
             description: row.querySelector(".edit-description").value,
-            tags: row.querySelector(".edit-tags").value,
+            // tags: row.querySelector(".edit-tags").value,
         };
 
         try {
@@ -411,7 +409,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <td>${todo.priority || "Low"}</td>
             <td>${todo.recurring || "None"}</td>
             <td>${todo.description}</td>
-            <td>${todo.tags || "—"}</td>
+            <!-- <td>${todo.tags || "—"}</td> -->
             <td><input type="checkbox" class="todo-checkbox" data-id="${todo.id}" ${todo.completed ? "checked" : ""}></td>
             <td><button class="deleteButton">Delete</button></td>
           `;
