@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     fetch(`/api/challenge?date=${selectedDate}`)
       .then(response => response.json())
       .then(data => {
-        console.log(data.title);
         // Ensure you have data to display
         if (data && data.title && data.exercise) {
           document.getElementById('challengetitle').innerText = data.title;
