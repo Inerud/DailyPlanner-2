@@ -39,20 +39,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
     
-            // Assign fetched todos to the global todos array
-            todos = data.todos;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Normalize time to start of today
     
-            // Display main todos
+            // Separate future/current todos from old todos
+            todos = data.todos.filter(todo => new Date(todo.date) >= today);
+            oldTodos = data.todos.filter(todo => new Date(todo.date) < today);
+    
             displayTodos(todos);
-    
-            // Filter and display old todos (yesterday or older)
-            oldTodos = data.todos.filter(todo => new Date(todo.date) <= new Date(Date.now() - 86400000));
             filterAndDisplayOldTodos();
     
         } catch (error) {
             console.error("Error fetching todos:", error);
         }
     }
+    
 
     function displayTodos(todos) {
         const tableBody = document.querySelector(".todotable tbody");
