@@ -3,13 +3,16 @@
 //implement habits
 //fix styling
 //cross out finished todos in the chedule
+// if daete = oday -> display TOday: date
 
 
 document.addEventListener("DOMContentLoaded", async function () {
   const dateDisplay = document.querySelector(".subtitle span");
   const leftArrow = document.querySelector(".left");
   const rightArrow = document.querySelector(".right");
-  const todoList = document.querySelector(".todos ul"); // To-Do List container
+  const todoList = document.querySelector(".todos ul");
+  const challengeSection = document.querySelector('.challenge');
+
 
   // Initialize with today's date
   let selectedDate = new Date();
@@ -28,7 +31,27 @@ document.addEventListener("DOMContentLoaded", async function () {
   function updateDateDisplay() {
     dateDisplay.textContent = formatDate(selectedDate);
     loadDataForDate(selectedDate);
+    fetchChallenge(selectedDate);
   }
+
+  function fetchChallenge(selectedDate) {
+    fetch(`/api/challenge?date=${selectedDate}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.title);
+        // Ensure you have data to display
+        if (data && data.title && data.exercise) {
+          document.getElementById('challengetitle').innerText = data.title;
+          document.getElementById('challengecomment').innerText = data.exercise;
+        } else {
+          // Fallback message if no data is found
+          document.getElementById('challengetitle').innerText = 'No challenge for today';
+          document.getElementById('challengecomment').innerText = 'Please check back tomorrow!';
+        }
+      })
+      .catch(error => console.error('Error fetching challenge:', error));
+}
+
 
   // Event listeners for navigation arrows
   leftArrow.addEventListener("click", function () {

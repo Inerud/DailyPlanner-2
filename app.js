@@ -369,6 +369,35 @@ app.put("/api/account", authenticateUser, (req, res) => {
 });
 
 
+app.get('/api/challenge', (req, res) => {
+  const selectedDate = req.query.date || new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
+
+  // Query to get all exercises
+  db.query('SELECT title, exercise FROM exercises ORDER BY created_at', (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Database query failed' });
+    }
+
+    const exercises = results;
+
+    // Calculate the challenge index based on the selected date
+    const dateObj = new Date(selectedDate);
+    const startOfYear = new Date(dateObj.getFullYear(), 0, 0); // Start of the year
+    const diff = dateObj - startOfYear; // Time difference between the selected date and the start of the year
+    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24)); // Get the day number in the year
+
+    // Ensure that the challenge index wraps around the available exercises
+    const challengeIndex = dayOfYear % exercises.length;
+
+    // Get the selected challenge
+    const selectedChallenge = exercises[challengeIndex];
+
+    // Return the challenge as a JSON response
+    res.json(selectedChallenge);
+  });
+});
+
+
 // ** Static Pages **
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "views", "home.html")));
 app.get("/journal", (req, res) => res.sendFile(path.join(__dirname, "views", "journal.html")));
