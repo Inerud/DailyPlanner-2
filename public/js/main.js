@@ -5,6 +5,10 @@
 //cross out finished todos in the chedule
 // if daete = oday -> display TOday: date
 
+//challenge:
+// add completed toggle working with habit tracker
+// add categories, let the user pick a challenge between the categories for each day?
+
 
 document.addEventListener("DOMContentLoaded", async function () {
   const dateDisplay = document.querySelector(".subtitle span");
