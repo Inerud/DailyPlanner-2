@@ -18,7 +18,7 @@
         <img src="/images/sunflower.png" alt="Sunflower">
       </div>
       <div class="subtitle">
-        <span>Tuesday 25.02.2025</span>
+        <span></span>
         <div class="arrows">
         </div>
       </div>
@@ -50,7 +50,7 @@
         <li></span> <span id="auth-section"><a href="/login">login</a></span>
         </li>
         <hr>
-    </ul>
+      </ul>
     </aside>
 
     <div class="todotable">
@@ -67,14 +67,37 @@
             <th>Edit</th>
           </tr>
         </thead>
-        <tbody>        </tbody>
+        <tbody> </tbody>
       </table>
     </div>
+
     <div class="buttons">
       <button id="addButton">+</button>
     </div>
 
 
+    <div class="old-todo-section">
+      <h2>Old Todos</h2>
+      <div class="oldtodotable">
+        <table class="tg">
+          <thead>
+            <tr>
+              <th data-column="date">Date <span class="arrow"></span></th> <!-- &#11206 down, &#11205 up -->
+              <th data-column="time">Time <span class="arrow"></span></th>
+              <th data-column="priority">Priority <span class="arrow"></span></th>
+              <th data-column="recurring">Recurring <span class="arrow"></span></th>
+              <th data-column="description">To-do <span class="arrow"></span></th>
+              <th data-column="tags">Tags </th>
+              <th data-column="completed">Done</th>
+              <th>Edit</th>
+            </tr>
+          </thead>
+          <tbody> </tbody> 
+        </table>
+      </div>
+      <button id="loadMoreButton" style="display:none;">Load More</button>
+      <button id="toggleCompletedButton">Show All Todos</button>
+    </div>
 
     <footer class="footer">
       <p>Contact: svl19@uni.brighton.ac.uk</p>

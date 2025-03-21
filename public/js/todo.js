@@ -3,7 +3,6 @@
 // Change color of finished tasks
 // DIfferent colors for different days? or priorities
 // Hide todos that are completed or low priority, and that are from yesterday or older
-// display sorting arrows
 // add symbols for edit, delete, and done
 // add a maximum of records shown at once
 // tag functionality
@@ -11,9 +10,18 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     const addButton = document.getElementById("addButton");
+    const dateDisplay = document.querySelector(".subtitle span");
+    const loadMoreButton = document.getElementById("loadMoreButton");
+    const toggleCompletedButton = document.getElementById("toggleCompletedButton");
+    const oldTodoSection = document.querySelector(".old-todo-section");
+    const oldTodoList = document.querySelector(".oldtodotable tbody");
 
     let todos = []; // Store fetched todos
     let currentSort = { column: null, order: "asc" }; // Track sorting state
+    let oldTodos = []; // Store old todos (from yesterday or older)
+    let filteredOldTodos = []; // Filtered version of old todos based on completed status
+    let currentPage = 0; // Page for old todos pagination
+    let showCompleted = false; // Flag to toggle between completed and uncompleted todos
 
     async function fetchTodos() {
         try {
@@ -31,8 +39,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            todos = data.todos;
+            // Display main todos
             displayTodos(todos);
+
+            // Filter and display old todos (yesterday or older)
+            oldTodos = data.todos.filter(todo => new Date(todo.date) <= new Date(Date.now() - 86400000)); // Older than yesterday
+            filterAndDisplayOldTodos();
+
         } catch (error) {
             console.error("Error fetching todos:", error);
         }
@@ -327,10 +340,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateArrows(sortedColumn) {
         const headers = document.querySelectorAll(".todotable th");
-        
+
         headers.forEach(header => {
             const arrow = header.querySelector(".arrow");
-    
+
             if (header.dataset.column === sortedColumn) {
                 // Update arrow direction based on the sort order
                 if (currentSort.order === "asc") {
@@ -357,12 +370,91 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    function filterAndDisplayOldTodos() {
+        filteredOldTodos = oldTodos.filter(todo => showCompleted || !todo.completed); // Show only uncompleted by default
+
+        // Sort by most recent (most recent date first)
+        filteredOldTodos.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        displayOldTodos();
+    }
+
+    // Function to display the filtered old todos with pagination
+    // Function to display the filtered old todos with pagination
+    function displayOldTodos() {
+        filteredOldTodos = oldTodos.filter(todo => showCompleted || !todo.completed); // Filter completed todos based on visibility
+
+        // Sort by most recent (most recent date first)
+        filteredOldTodos.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        const todosToShow = filteredOldTodos.slice(currentPage * 5, (currentPage + 1) * 5);
+
+        // Clear current old todo list
+        oldTodoList.innerHTML = ""; // Now targeting tbody
+
+        if (todosToShow.length === 0) {
+            oldTodoList.innerHTML = "<tr><td colspan='8'>No old todos found.</td></tr>"; // Use tr for the no todos message
+            loadMoreButton.style.display = "none"; // Hide the load more button if no todos are found
+            return;
+        }
+
+        todosToShow.forEach(todo => {
+            const row = document.createElement("tr");
+            row.classList.add("old-todo-item");
+            row.innerHTML = `
+            <td>${todo.date ? formatDate(todo.date) : "—"}</td>
+            <td>${todo.time || "—"}</td>
+            <td>${todo.priority || "Low"}</td>
+            <td>${todo.recurring || "None"}</td>
+            <td>${todo.description}</td>
+            <td>${todo.tags || "—"}</td>
+            <td><input type="checkbox" class="todo-checkbox" data-id="${todo.id}" ${todo.completed ? "checked" : ""}></td>
+            <td><button class="deleteButton">Delete</button></td>
+          `;
+            oldTodoList.appendChild(row);
+        });
+
+        loadMoreButton.style.display = filteredOldTodos.length > (currentPage + 1) * 5 ? "block" : "none"; // Show button if there are more todos to load
+    }
+
+
+    // Event listener for "Load More" button
+    loadMoreButton.addEventListener("click", () => {
+        currentPage++;
+        displayOldTodos();
+    });
+
+    // Event listener for toggling completed todos visibility
+    toggleCompletedButton.addEventListener("click", () => {
+        showCompleted = !showCompleted;
+        filterAndDisplayOldTodos();
+        toggleCompletedButton.textContent = showCompleted ? "Show Uncompleted Todos" : "Show All Todos"; // Change button text accordingly
+    });
+
+
     //helper functions:
     function formatDate(dateString) {
         const date = new Date(dateString);
         return date.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit" }); // Formats as DD.MM
     }
 
+    let selectedDate = new Date();
+    // Function to format date as "Tuesday 28, February 2025"
+    function formatFullDate(date) {
+        return date.toLocaleDateString("en-GB", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+    }
+
+    // Function to update date display and reload data
+    function updateDateDisplay() {
+        dateDisplay.textContent = formatFullDate(selectedDate);
+    }
+
+    updateDateDisplay();
     fetchTodos();
     setUpSorting();
 });
