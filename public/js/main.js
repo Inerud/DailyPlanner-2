@@ -1,13 +1,16 @@
-//add "reward" for completing exercise
-//mplement challenge
-//implement habits
-//fix styling
+// add "reward" for completing exercise
+// implement challenge
+// implement habits
+// fix styling
 //cross out finished todos in the chedule
 // if daete = oday -> display TOday: date
+// fix bug: date selector doesnt do anything
 
-//challenge:
+// challenge:
 // add completed toggle working with habit tracker
 // add categories, let the user pick a challenge between the categories for each day?
+
+//Physical, Mental, Social, Creative, Productive)
 
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -38,6 +41,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     fetchChallenge(selectedDate);
   }
 
+
+  //let user pick category
   function fetchChallenge(selectedDate) {
     fetch(`/api/challenge?date=${selectedDate}`)
       .then(response => response.json())
@@ -46,6 +51,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (data && data.title && data.exercise) {
           document.getElementById('challengetitle').innerText = data.title;
           document.getElementById('challengecomment').innerText = data.exercise;
+          //complete button
+          //like and dislike button
         } else {
           // Fallback message if no data is found
           document.getElementById('challengetitle').innerText = 'No challenge for today';
@@ -53,8 +60,18 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
       })
       .catch(error => console.error('Error fetching challenge:', error));
-}
+  }
 
+  function streakDisplay() {
+      //calculate streak
+      //if streak is 3 or more display it
+  }
+
+  function markAsComplete() {
+    //check of completed challenge
+    //change display appropriatly
+    //add confetti?
+  }
 
   // Event listeners for navigation arrows
   leftArrow.addEventListener("click", function () {
