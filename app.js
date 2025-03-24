@@ -423,22 +423,30 @@ app.get("/api/challenge", (req, res) => {
 });
 
 // **POST - Mark Challenge as Completed, Liked, or Disliked**
-app.post("/api/challenge/complete", (req, res) => {
-  if (!req.session.user_id) {
+app.post("/api/challenge/complete", authenticateUser, (req, res) => {
+  if (!req.userId) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const { challenge_id, status } = req.body;
-  const userId = req.session.user_id;
+  console.log("Request Body:", req.body); // Log the request body
+  const {exercise_id} = req.body;
+  const userId = req.userId;
+
+  if (!exercise_id) {
+    return res.status(400).json({ error: "exercise_id is required" });
+  }
 
   const sql = `
-    INSERT INTO challenge_progress (user_id, challenge_id, status) 
-    VALUES (?, ?, ?) 
-    ON DUPLICATE KEY UPDATE status = ?
+    INSERT INTO exercise_completion (user_id, exercise_id) 
+    VALUES (?, ?) 
+    ON DUPLICATE KEY UPDATE completed_at = NOW();
   `;
 
-  db.query(sql, [userId, challenge_id, status, status], (err) => {
-    if (err) return res.status(500).json({ error: err.message });
+  db.query(sql, [userId, exercise_id], (err) => {
+    if (err) {
+      console.error("Database Error:", err);
+      return res.status(500).json({ error: err.message });
+    }
     res.json({ success: true });
   });
 });

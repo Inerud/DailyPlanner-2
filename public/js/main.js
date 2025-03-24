@@ -71,20 +71,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   });
 
-  /** Challenge Fetching and Display **/
-  // function fetchChallenge(selectedDate) {
-  //   //show previous challenges
-  //   //remove display for future days
-
-  //   fetch(`/api/challenge?date=${selectedDate}`)
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       document.getElementById('challengetitle').innerText = data.title || 'No challenge for today';
-  //       document.getElementById('challengecomment').innerText = data.exercise || 'Please check back tomorrow!';
-  //     })
-  //     .catch(error => console.error('Error fetching challenge:', error));
-  // }
-
   function fetchChallenge(selectedDate) {
     fetch(`/api/challenge?date=${selectedDate.toISOString().split("T")[0]}`)
       .then(response => response.json())
@@ -122,35 +108,28 @@ document.addEventListener("DOMContentLoaded", async function () {
     selectedChallengeId = challenge.id;
 
     challengeSection.innerHTML = "";
-    challengeSection.innerHTML = "<h2>Today's challenge</h2>
+    challengeSection.innerHTML = `
+    <h2>Todays challenge</h2>
     <div class="challengetext">
-        <p id="challengetitle"></p>
-        <p id="challengecomment"> Not fetching challenge...</p>
-    </div>
-    <button id="completebtn">Mark as Complete</button>
-    <button id="likebtn">Like</button>
-    <button id="dislikebtn">Dislike</button>";
-    <h2>Today's challenge</h2>
-    <div class="challengetext">
-        <p id="challengetitle"></p>
-        <p id="challengecomment"> </p>
-    </div>
+      <p id="challengetitle"></p>
+      <p id="challengecomment"> Not fetching challenge...</p></div>
     <button id="completebtn">Mark as Complete</button>
     <button id="likebtn">Like</button>
     <button id="dislikebtn">Dislike</button>
-
+    `;
 
     // Update the challenge display section
     document.getElementById("challengetitle").innerText = challenge.title;
     document.getElementById("challengecomment").innerText = challenge.exercise;
 
     // Show the action buttons
-    document.getElementById("completebtn").style.display = "block";
+    document.getElementById("completebtn").style.display = "block"; 
+    document.getElementById("completebtn").addEventListener("click", markAsComplete);
     document.getElementById("likebtn").style.display = "block";
     document.getElementById("dislikebtn").style.display = "block";
   }
 
-  document.getElementById("completebtn").addEventListener("click", markAsComplete);
+  
   function markAsComplete(status) {
     if (!selectedChallengeId) {
       alert("Please select a challenge first!");
@@ -160,14 +139,18 @@ document.addEventListener("DOMContentLoaded", async function () {
     fetch("/api/challenge/complete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ challenge_id: selectedChallengeId, status })
+      body: JSON.stringify({ exercise_id: selectedChallengeId, status })
     })
       .then(response => response.json())
       .then(() => {
-        alert("Challenge updated!");
         fetchChallenge(new Date()); // Reload challenges
+        completefeedback();
       })
       .catch(error => console.error("Error updating challenge:", error));
+  }
+
+  function completefeedback() {
+    console.log("You did it!");
   }
 
   /** Data Fetching and Updating **/
