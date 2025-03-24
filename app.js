@@ -136,7 +136,7 @@ app.delete("/api/journal/:id", authenticateUser, (req, res) => {
 // fetch all to-do items from authenticated user
 app.get("/api/todos", authenticateUser, (req, res) => {
   const query = "SELECT * FROM todos WHERE user_id = ? ORDER BY date, time";
-  
+
   db.query(query, [req.userId], (err, results) => {
     if (err) {
       console.error("Error fetching todos:", err);
@@ -155,14 +155,14 @@ app.get("/api/todos", authenticateUser, (req, res) => {
 
 //fetch all todos for certain date
 app.get("/api/data", authenticateUser, (req, res) => {
-  const { date } = req.query; 
+  const { date } = req.query;
 
   if (!date) {
     return res.status(400).json({ success: false, message: "Date is required" });
   }
 
   const query = "SELECT * FROM todos WHERE user_id = ? AND DATE(date) = ? ORDER BY priority DESC, time";
-  
+
   db.query(query, [req.userId, date], (err, results) => {
     if (err) {
       console.error("Error fetching todos for date:", err);
@@ -307,7 +307,7 @@ app.delete("/api/todos/:id", authenticateUser, (req, res) => {
       console.error("Error deleting tags:", tagErr);
       // We log the error and continue to delete the todo item.
     }
-    
+
     // Now delete the todo item
     const query = "DELETE FROM todos WHERE id = ? AND user_id = ?";
     db.query(query, [id, req.userId], (err, result) => {
@@ -369,33 +369,87 @@ app.put("/api/account", authenticateUser, (req, res) => {
 });
 
 
-app.get('/api/challenge', (req, res) => {
-  const selectedDate = req.query.date || new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
+// app.get('/api/challenge', (req, res) => {
+//   const selectedDate = req.query.date || new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
 
-  // Query to get all exercises
-  db.query('SELECT title, exercise FROM exercises ORDER BY created_at', (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: 'Database query failed' });
-    }
+//   // Query to get all exercises
+//   db.query('SELECT title, exercise FROM exercises ORDER BY created_at', (err, results) => {
+//     if (err) {
+//       return res.status(500).json({ error: 'Database query failed' });
+//     }
 
-    const exercises = results;
+//     const exercises = results;
 
-    // Calculate the challenge index based on the selected date
-    const dateObj = new Date(selectedDate);
-    const startOfYear = new Date(dateObj.getFullYear(), 0, 0); // Start of the year
-    const diff = dateObj - startOfYear; // Time difference between the selected date and the start of the year
-    const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24)); // Get the day number in the year
+//     // Calculate the challenge index based on the selected date
+//     const dateObj = new Date(selectedDate);
+//     const startOfYear = new Date(dateObj.getFullYear(), 0, 0); // Start of the year
+//     const diff = dateObj - startOfYear; // Time difference between the selected date and the start of the year
+//     const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24)); // Get the day number in the year
 
-    // Ensure that the challenge index wraps around the available exercises
-    const challengeIndex = dayOfYear % exercises.length;
+//     // Ensure that the challenge index wraps around the available exercises
+//     const challengeIndex = dayOfYear % exercises.length;
 
-    // Get the selected challenge
-    const selectedChallenge = exercises[challengeIndex];
+//     // Get the selected challenge
+//     const selectedChallenge = exercises[challengeIndex];
 
-    // Return the challenge as a JSON response
-    res.json(selectedChallenge);
+//     // Return the challenge as a JSON response
+//     res.json(selectedChallenge);
+//   });
+// });
+
+// **GET Challenges (Returns 3 challenges per day)**
+app.get("/api/challenge", (req, res) => {
+  const date = req.query.date;
+  const categories = ["PHYSICAL", "MENTAL", "SOCIAL", "CREATIVE", "PRODUCTIVE", "JOURNAL"];
+  const challenges = [];
+
+  db.promise()
+    .query("SELECT category FROM exercises GROUP BY category")
+    .then(([rows]) => {
+      const availableCategories = rows.map((row) => row.category);
+      const selectedCategories = categories.filter((cat) => availableCategories.includes(cat));
+      shuffle(selectedCategories);
+
+      const challengePromises = selectedCategories.slice(0, 3).map((category) =>
+        db.promise()
+          .query("SELECT * FROM exercises WHERE category = ? ORDER BY RAND() LIMIT 1", [category])
+          .then(([result]) => (result.length ? challenges.push(result[0]) : null))
+      );
+
+      return Promise.all(challengePromises);
+    })
+    .then(() => res.json(challenges))
+    .catch((err) => res.status(500).json({ error: err.message }));
+});
+
+// **POST - Mark Challenge as Completed, Liked, or Disliked**
+app.post("/api/challenge/complete", (req, res) => {
+  if (!req.session.user_id) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const { challenge_id, status } = req.body;
+  const userId = req.session.user_id;
+
+  const sql = `
+    INSERT INTO challenge_progress (user_id, challenge_id, status) 
+    VALUES (?, ?, ?) 
+    ON DUPLICATE KEY UPDATE status = ?
+  `;
+
+  db.query(sql, [userId, challenge_id, status, status], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ success: true });
   });
 });
+
+// **Helper function to shuffle an array**
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
 
 
 // ** Static Pages **
