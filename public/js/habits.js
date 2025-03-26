@@ -79,4 +79,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+
+    async function deleteHabit(id) {
+        try {
+            const response = await fetch(`/api/habits/${id}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+            });
+
+            const data = await response.json();
+            console.log(data);
+
+        } catch (error) {
+            console.error("Error deleting todo:", error);
+        }
+    }
+
 });
