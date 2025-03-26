@@ -1,58 +1,83 @@
-const request = require("supertest");
-const express = require("express");
-const app = require("../app.js"); // Ensure this correctly imports your Express app
-const db = require("../server/config/db.js");
+const request = require('supertest');
+const app = require('../app'); // Assuming routes are already defined here
+const db = require('../server/config/db');
 
-jest.mock("../server/config/db.js"); // Mock MySQL connection
+// Mocking db connection
+jest.mock('../server/config/db.js', () => ({
+  connect: jest.fn((callback) => callback(null)), // Mock successful connection
+  execute: jest.fn().mockResolvedValue([]), // Mocking DB execute
+}));
 
-describe("Integration Tests", () => {
-  beforeAll(() => {
-    db.connect.mockImplementation((callback) => callback(null)); // Mock successful connection
+// Mocking console.log to avoid log output during tests
+jest.spyOn(console, 'log').mockImplementation(() => {});
+
+describe('Test Suite', () => {
+  beforeAll(async () => {
+    // If app.listen is used, mock it out or handle async logic
+    jest.mock('../app', () => ({
+      listen: jest.fn().mockImplementation(() => {}),
+    }));
   });
 
-  test("should return user data if authenticated", async () => {
-    const mockAuthMiddleware = (req, res, next) => {
-      req.oidc = {
-        isAuthenticated: () => true,
-        user: { name: "Test User", email: "test@example.com" },
-      };
-      next();
-    };
+  
+  let habitId;
 
-    app.use(mockAuthMiddleware); // Inject the mock auth
+  it('should create a new habit', async () => {
+    const response = await request(app)
+      .post('/api/habits')
+      .send({
+        user_id: 1,
+        title: 'Drink Water',
+        category: 'Health',
+        frequency: 'DAILY',
+        weekly_target: 7
+      });
 
-    const response = await request(app).get("/api/user");
+    expect(response.status).toBe(201);
+    expect(response.body.message).toBe('Habit created successfully');
+    habitId = response.body.habit_id; // Save habit_id for future tests
+  });
+
+  it('should retrieve habits for a user', async () => {
+    const response = await request(app)
+      .get('/api/habits/1');
+
     expect(response.status).toBe(200);
-    expect(response.body.user).toHaveProperty("name", "Test User");
+    expect(Array.isArray(response.body)).toBe(true);
   });
 
-  test("should return null if not authenticated", async () => {
-    const mockAuthMiddleware = (req, res, next) => {
-      req.oidc = { isAuthenticated: () => false };
-      next();
-    };
+  it('should update an existing habit', async () => {
+    const response = await request(app)
+      .put(`/api/habits/${habitId}`)
+      .send({
+        title: 'Drink Water - Updated',
+        category: 'Health',
+        frequency: 'DAILY',
+        weekly_target: 7
+      });
 
-    app.use(mockAuthMiddleware);
-
-    const response = await request(app).get("/api/user");
     expect(response.status).toBe(200);
-    expect(response.body.user).toBeNull();
+    expect(response.body.message).toBe('Habit updated successfully');
   });
 
-  test("should serve index.html on GET /", async () => {
-    const response = await request(app).get("/");
+  it('should delete a habit', async () => {
+    const response = await request(app)
+      .delete(`/api/habits/${habitId}`);
+
     expect(response.status).toBe(200);
-    expect(response.text).toMatch(/<html>/); // Check if HTML is served
+    expect(response.body.message).toBe('Habit deleted successfully');
   });
 
-  test("should serve journal.html on GET /journal", async () => {
-    const response = await request(app).get("/journal");
-    expect(response.status).toBe(200);
-    expect(response.text).toMatch(/<html>/);
-  });
+  it('should return an error if required fields are missing', async () => {
+    const response = await request(app)
+      .post('/api/habits')
+      .send({
+        user_id: 1,
+        category: 'Health',
+        frequency: 'DAILY'
+      });
 
-  test("should redirect on logout", async () => {
-    const response = await request(app).get("/logout");
-    expect(response.status).toBe(302); // 302 Found for redirects
+    expect(response.status).toBe(400);
+    expect(response.text).toBe('Missing required fields');
   });
 });
