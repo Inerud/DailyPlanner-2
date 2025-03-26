@@ -55,4 +55,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     
+    async function updateHabit(id) {
+        const updateHabit = {
+            title: 'Drink Water - Updated',
+            category: 'Health',
+            frequency: 'DAILY',
+            weekly_target: 7
+        };
+
+        try {
+            const response = await fetch(`/api/habits/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updateHabit),
+            });
+            
+            const data = await response.json();
+
+            console.log(data);
+
+        } catch (error) {
+            console.error("Error updating todo status:", error);
+        }
+    }
+
 });
