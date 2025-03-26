@@ -368,35 +368,6 @@ app.put("/api/account", authenticateUser, (req, res) => {
   });
 });
 
-
-// app.get('/api/challenge', (req, res) => {
-//   const selectedDate = req.query.date || new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
-
-//   // Query to get all exercises
-//   db.query('SELECT title, exercise FROM exercises ORDER BY created_at', (err, results) => {
-//     if (err) {
-//       return res.status(500).json({ error: 'Database query failed' });
-//     }
-
-//     const exercises = results;
-
-//     // Calculate the challenge index based on the selected date
-//     const dateObj = new Date(selectedDate);
-//     const startOfYear = new Date(dateObj.getFullYear(), 0, 0); // Start of the year
-//     const diff = dateObj - startOfYear; // Time difference between the selected date and the start of the year
-//     const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24)); // Get the day number in the year
-
-//     // Ensure that the challenge index wraps around the available exercises
-//     const challengeIndex = dayOfYear % exercises.length;
-
-//     // Get the selected challenge
-//     const selectedChallenge = exercises[challengeIndex];
-
-//     // Return the challenge as a JSON response
-//     res.json(selectedChallenge);
-//   });
-// });
-
 // **GET Challenges (Returns 3 challenges per day)**
 app.get("/api/challenge", (req, res) => {
   const date = req.query.date;
@@ -404,45 +375,84 @@ app.get("/api/challenge", (req, res) => {
   const challenges = [];
 
   db.promise()
-    .query("SELECT category FROM exercises GROUP BY category")
-    .then(([rows]) => {
-      const availableCategories = rows.map((row) => row.category);
-      const selectedCategories = categories.filter((cat) => availableCategories.includes(cat));
-      shuffle(selectedCategories);
-
-      const challengePromises = selectedCategories.slice(0, 3).map((category) =>
-        db.promise()
-          .query("SELECT * FROM exercises WHERE category = ? ORDER BY RAND() LIMIT 1", [category])
-          .then(([result]) => (result.length ? challenges.push(result[0]) : null))
-      );
-
-      return Promise.all(challengePromises);
-    })
-    .then(() => res.json(challenges))
+    .query(`
+      SELECT * FROM exercises 
+      ORDER BY RAND() 
+      LIMIT 3
+    `)
+    .then(([rows]) => res.json(rows))
     .catch((err) => res.status(500).json({ error: err.message }));
 });
 
-// **POST - Mark Challenge as Completed, Liked, or Disliked**
-app.post("/api/challenge/complete", authenticateUser, (req, res) => {
-  if (!req.userId) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  console.log("Request Body:", req.body); // Log the request body
-  const {exercise_id} = req.body;
+app.get("/api/challenge/today", authenticateUser, (req, res) => {
   const userId = req.userId;
-
-  if (!exercise_id) {
-    return res.status(400).json({ error: "exercise_id is required" });
-  }
+  const today = new Date().toISOString().split('T')[0];
 
   const sql = `
-    INSERT INTO exercise_completion (user_id, exercise_id) 
-    VALUES (?, ?) 
-    ON DUPLICATE KEY UPDATE completed_at = NOW();
+  SELECT ec.exercise_id, ec.completed_at, e.title, e.exercise, e.category
+  FROM exercise_completion ec
+  JOIN exercises e ON ec.exercise_id = e.id
+  WHERE ec.user_id = ? AND ec.selected_at = ?
+`;
+
+
+  db.query(sql, [userId, today], (err, result) => {
+    if (err) {
+      console.error("Database Error:", err);
+      return res.status(500).json({ error: err.message });
+    }
+
+    if (result.length > 0) {
+      // User has already picked a challenge for today
+      return res.json({ 
+        success: true, 
+        challenge_id: result[0].exercise_id, 
+        title: result[0].title,  // Add this
+        exercise: result[0].exercise,  // And this
+        completed: result[0].completed_at !== null
+      });
+    } else {
+      return res.json({
+        success: false
+      });
+    }
+
+  });
+});
+
+
+app.post("/api/challenge/select", authenticateUser, (req, res) => {
+  const userId = req.userId;
+  const { exercise_id } = req.body;
+  const today = new Date().toISOString().split('T')[0];
+
+  const sql = `
+    INSERT INTO exercise_completion (user_id, exercise_id, selected_at) 
+    VALUES (?, ?, ?)
+    ON DUPLICATE KEY UPDATE exercise_id = VALUES(exercise_id);
   `;
 
-  db.query(sql, [userId, exercise_id], (err) => {
+  db.query(sql, [userId, exercise_id, today], (err) => {
+    if (err) {
+      console.error("Database Error:", err);
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ success: true, challenge_id: exercise_id });
+  });
+});
+
+app.post("/api/challenge/complete", authenticateUser, (req, res) => {
+  const userId = req.userId;
+  const { exercise_id } = req.body;
+  const today = new Date().toISOString().split('T')[0];
+
+  const sql = `
+    UPDATE exercise_completion 
+    SET completed_at = NOW() 
+    WHERE user_id = ? AND exercise_id = ? AND selected_at = ?
+  `;
+
+  db.query(sql, [userId, exercise_id, today], (err) => {
     if (err) {
       console.error("Database Error:", err);
       return res.status(500).json({ error: err.message });
@@ -450,6 +460,35 @@ app.post("/api/challenge/complete", authenticateUser, (req, res) => {
     res.json({ success: true });
   });
 });
+
+// **POST - Mark Challenge as Completed, Liked, or Disliked**
+// app.post("/api/challenge/complete", authenticateUser, (req, res) => {
+//   if (!req.userId) {
+//     return res.status(401).json({ error: "Unauthorized" });
+//   }
+
+//   console.log("Request Body:", req.body); // Log the request body
+//   const {exercise_id} = req.body;
+//   const userId = req.userId;
+
+//   if (!exercise_id) {
+//     return res.status(400).json({ error: "exercise_id is required" });
+//   }
+
+//   const sql = `
+//     INSERT INTO exercise_completion (user_id, exercise_id) 
+//     VALUES (?, ?) 
+//     ON DUPLICATE KEY UPDATE completed_at = NOW();
+//   `;
+
+//   db.query(sql, [userId, exercise_id], (err) => {
+//     if (err) {
+//       console.error("Database Error:", err);
+//       return res.status(500).json({ error: err.message });
+//     }
+//     res.json({ success: true });
+//   });
+// });
 
 // **Helper function to shuffle an array**
 function shuffle(array) {

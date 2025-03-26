@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   function updateDateDisplay() {
     dateDisplay.textContent = formatDate(selectedDate);
     loadDataForDate(selectedDate);
-    fetchChallenge(selectedDate);
+    fetchSelectedChallenge(selectedDate);
   }
 
   function changeDate(days) {
@@ -105,52 +105,72 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   function selectChallenge(challenge) {
-    selectedChallengeId = challenge.id;
-
-    challengeSection.innerHTML = "";
-    challengeSection.innerHTML = `
-    <h2>Todays challenge</h2>
-    <div class="challengetext">
-      <p id="challengetitle"></p>
-      <p id="challengecomment"> Not fetching challenge...</p></div>
-    <button id="completebtn">Mark as Complete</button>
-    <button id="likebtn">Like</button>
-    <button id="dislikebtn">Dislike</button>
-    `;
-
-    // Update the challenge display section
-    document.getElementById("challengetitle").innerText = challenge.title;
-    document.getElementById("challengecomment").innerText = challenge.exercise;
-
-    // Show the action buttons
-    document.getElementById("completebtn").style.display = "block"; 
-    document.getElementById("completebtn").addEventListener("click", markAsComplete);
-    document.getElementById("likebtn").style.display = "block";
-    document.getElementById("dislikebtn").style.display = "block";
+    fetch("/api/challenge/select", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        exercise_id: challenge.id, 
+        date: selectedDate.toISOString().split("T")[0] 
+      })
+    })
+    .then(response => response.json())
+    .then(() => {
+      // Update the UI to show the selected challenge
+      displaySelectedChallenge(challenge);
+    })
+    .catch(error => console.error("Error selecting challenge:", error));
   }
-
   
-  function markAsComplete(status) {
-    if (!selectedChallengeId) {
-      alert("Please select a challenge first!");
-      return;
-    }
-
+  function displaySelectedChallenge(challenge) {
+    challengeSection.innerHTML = `
+      <h2>Todays challenge</h2>
+      <div class="challengetext">
+        <p id="challengetitle">${challenge.title}</p>
+        <p id="challengecomment">${challenge.exercise}</p>
+      </div>
+      <button id="completebtn">Mark as Complete</button>
+      <button id="likebtn">Like</button>
+      <button id="dislikebtn">Dislike</button>
+    `;
+  
+    document.getElementById("completebtn").addEventListener("click", () => markAsComplete());
+  }
+  
+  function markAsComplete() {
     fetch("/api/challenge/complete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ exercise_id: selectedChallengeId, status })
-    })
-      .then(response => response.json())
-      .then(() => {
-        fetchChallenge(new Date()); // Reload challenges
-        completefeedback();
+      body: JSON.stringify({ 
+        date: selectedDate.toISOString().split("T")[0] 
       })
-      .catch(error => console.error("Error updating challenge:", error));
+    })
+    .then(response => response.json())
+    .then(() => {
+      //fetchChallenge(selectedDate); // Reload to reflect completion
+      completefeedback();
+    })
+    .catch(error => console.error("Error marking challenge as complete:", error));
   }
 
+  function fetchSelectedChallenge(date) {
+    fetch(`/api/challenge/today`)
+      .then(response => response.json())
+      .then(result => {
+        if (result.success) {
+          // Display the challenge if the user has already selected one
+          displaySelectedChallenge(result);
+        } else {
+          // No challenge selected, fetch the available challenges
+          fetchChallenge(date); // Show options if no challenge is picked
+        }
+      })
+      .catch(error => console.error("Error fetching selected challenge:", error));
+  }
+  
+
   function completefeedback() {
-    console.log("You did it!");
+    fireworks();
+
   }
 
   /** Data Fetching and Updating **/
