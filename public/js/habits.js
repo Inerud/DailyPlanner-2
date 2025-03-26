@@ -32,6 +32,27 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
     
+    async function getHabits() {
+        try {
+            const response = await fetch("/api/habits", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
     
+            const data = await response.json();
+
+            console.log(data);
+    
+            if (!data.success) {
+                console.error("Failed to fetch habits:", data.message);
+                return;
+            }
+
+        } catch (error) {
+            console.error("Error fetching habits:", error);
+        }
+    }
     
 });

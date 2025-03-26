@@ -487,15 +487,13 @@ app.post('/api/habits', authenticateUser, (req, res) => {
 });
 
 // READ Habits (for a specific user)
-app.get('/api/habits/:user_id', (req, res) => {
-  const { user_id } = req.userId;
-
+app.get('/api/habits', authenticateUser, (req, res) => {
   const sql = `
     SELECT habit_id, title, category, frequency, weekly_target, streak, created_at, updated_at 
     FROM habits WHERE user_id = ?
   `;
 
-  db.query(sql, [user_id], (err, habits) => {
+  db.query(sql, req.userId, (err, habits) => {
     if (err) {
       console.error(err);
       return res.status(500).send("Error fetching habits");
