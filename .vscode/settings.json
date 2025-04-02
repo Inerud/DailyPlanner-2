@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/e11bd83c-9bdd-47e1-a6cd-95d6054ba3db/resourceGroups/Inerud/providers/Microsoft.Web/sites/Inerud-DailyPlanner",
+    "appService.deploySubpath": "."
+}
