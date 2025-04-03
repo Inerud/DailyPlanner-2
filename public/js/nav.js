@@ -6,15 +6,15 @@ const tools = document.getElementById("tools");
 
         tools.innerHTML = `
         <ul>
-            <li><a href="habits">Habits</a></li>
-            <hr>
-            <li><a href="mealplanner">Meal Planner</a></li>
+            <li><a href="../">Calendar</a></li>
             <hr>
             <li><a href="journal">Journal</a></li>
             <hr>
             <li><a href="todo">To-do</a></li>
             <hr>
-            <li><a href="../">Calendar</a></li>
+            <li><a href="habits">Habits</a></li>
+            <hr>
+            <li><a href="mealplanner">Meal Planner</a></li>
             <hr>
             <li><a href="../">Notes</a></li>
             <hr>

@@ -6,6 +6,12 @@
   color:#AC3B61;
 }
 
+.fredericka-the-great-regular {
+  font-family: "Fredericka the Great", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 
 body {
   height: 100%;
@@ -25,7 +31,7 @@ body {
   gap: 1.5%;
   height: fit-content;
   margin-left: 16%;
-min-height: 100vh;
+ min-height: 100vh;
 }
 
 /* Sidebar (Tools) */
@@ -88,6 +94,7 @@ min-height: 100vh;
 
 
 /* Header */
+
 .header {
   grid-column: 1 / 6;
   grid-row: 1 / 2;
@@ -108,7 +115,7 @@ min-height: 100vh;
 
   padding-left: 1%;
   text-transform:capitalize ;
-  font-size: large;
+  font-size: xx-large;
   border: solid #000;
   border-width: 0 1px 1px 0;
 }
@@ -135,7 +142,7 @@ min-height: 100vh;
   grid-row-start: 3;
   border: solid #000;
   border-width: 0 1px 0 0;
-  font-size: large;
+  font-size: x-large;
 }
 
 .header .subtitle .arrows {
@@ -148,7 +155,7 @@ min-height: 100vh;
   grid-column: span 2 / span 2;
   grid-column-start: 4;
   grid-row-start: 3;
-  font-size: large;
+  font-size: x-large;
 }
 
 
