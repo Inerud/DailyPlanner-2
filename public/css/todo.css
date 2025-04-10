@@ -50,6 +50,6 @@
 
 .buttons {
     grid-column: 1 / 6;
-    float: right;
+    float: left;
     margin-left: auto;
 }

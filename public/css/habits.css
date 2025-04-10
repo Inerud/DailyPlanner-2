@@ -4,12 +4,14 @@
 
     width: 100%;
     height: fit-content;
-    overflow-x: auto; /* Enables horizontal scrolling */
-    
-    white-space: nowrap; /* Ensures the table stays in a single horizontal line */
+    overflow-x: auto;
+    /* Enables horizontal scrolling */
+
+    white-space: nowrap;
+    /* Ensures the table stays in a single horizontal line */
 }
 
-.habittable table {
+/* .habittable table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
@@ -18,12 +20,39 @@
 .habittable th, 
 .habittable td {
     border: 1px solid black;
-    padding: 8px;
+    padding: 5px;
     text-align: center;
-    min-width: 25px;
+    width: 100%;
 }
 
 .habittable th {
     background-color: lightgray;
     font-weight: bold;
+} */
+
+table {
+    width: 100%;
+    table-layout: auto;
+    /* allow cells to size based on content */
+    border-collapse: collapse;
+}
+
+td,
+th {
+    white-space: nowrap;
+    /* prevent breaking words unless needed */
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+.days {
+    padding: 0;
+    margin: 0;
+    font-size: 70%;
+}
+
+.heading {
+    padding: 0;
+    margin: 0;
+    font-size: 125%;
 }
