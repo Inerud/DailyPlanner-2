@@ -8,12 +8,10 @@
 //habit connected to excersise
 
 document.addEventListener("DOMContentLoaded", () => {
-    async function createHabit() {
+    async function createHabit(title, goal) {
         const newHabit = {
-            title: 'Drink Water',
-            category: 'Health',
-            frequency: 'DAILY',
-            weekly_target: 7
+            title: title,
+            goal: goal
         };
     
         try {
@@ -58,9 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function updateHabit(id) {
         const updateHabit = {
             title: 'Drink Water - Updated',
-            category: 'Health',
-            frequency: 'DAILY',
-            weekly_target: 7
+            goal: '20'
         };
 
         try {
@@ -94,5 +90,24 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error deleting todo:", error);
         }
     }
+
+    async function toggleHabit(habit_id, user_id, date) {
+        try {
+            const response = await fetch(`/api/habits/toggle/${habit_id}/${user_id}/${date}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+    
+            const data = await response.json();
+            console.log(`Habit ${habit_id} on ${date} is now marked as:`, data.status);
+            return data.status;
+    
+        } catch (error) {
+            console.error("Error toggling habit:", error);
+        }
+    }
+    
 
 });
