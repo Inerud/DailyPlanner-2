@@ -7,6 +7,8 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     const tableContainer = document.getElementById("main");
+    document.getElementById('addHabitBtn').addEventListener('click', addHabit);
+
     const habitColors = ["#ffe066", "#f4b0c8", "#a1d0ff", "#b6e3b6"];
 
     let habits = [];
@@ -249,6 +251,28 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
+    async function addHabit() {
+        try {
+            const res = await fetch("/api/habits", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ title: "New Habit" })
+            });
+    
+            if (!res.ok) {
+                throw new Error("Failed to add habit");
+            }
+    
+            const newHabit = await res.json();
+    
+            fetchHabits(); 
+        } catch (error) {
+            console.error(error);
+            alert("Could not add habit.");
+        }
+    }
 
     fetchHabits();
 });

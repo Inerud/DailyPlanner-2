@@ -2,14 +2,14 @@ const db = require("../config/db");
 
 // Create a new habit
 exports.createHabit = (req, res) => {
-  const { title, category, goal } = req.body;
+  const { title } = req.body;
 
   const sql = `
-    INSERT INTO habits (user_id, title, goal) 
-    VALUES (?, ?, ?)
+    INSERT INTO habits (user_id, title) 
+    VALUES (?, ?)
   `;
 
-  db.query(sql, [req.userId, title, goal], (err, result) => {
+  db.query(sql, [req.userId, title], (err, result) => {
     if (err) {
       console.error("Database Error:", err);
       return res.status(500).json({ error: err.message });
