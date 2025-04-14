@@ -1,3 +1,10 @@
+//TODO: 
+//add habit
+//delete habit
+//edit habit(name, and goal)
+//confetti when monthly goal reached
+//swap view between months
+
 document.addEventListener("DOMContentLoaded", () => {
     const tableContainer = document.getElementById("main");
     const habitColors = ["#ffe066", "#f4b0c8", "#a1d0ff", "#b6e3b6"];
@@ -111,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
             nameCell.className = 'tg-0lax habit-name';
             nameCell.textContent = habit.name;
             nameCell.contentEditable = true; // Prep for edit
+
             row.appendChild(nameCell);
 
             for (let day = 1; day <= daysInMonth; day++) {
@@ -138,9 +146,26 @@ document.addEventListener("DOMContentLoaded", () => {
             // Goal cell
             const goalCell = document.createElement('td');
             goalCell.className = 'tg-0lax habit-goal';
-            goalCell.contentEditable = true; // Editable goal
             goalCell.textContent = habit.goal;
+            goalCell.contentEditable = true;
             row.appendChild(goalCell);
+
+            // Update when either cell is edited
+            const saveEdit = () => {
+                const updatedTitle = nameCell.textContent.trim();
+                const updatedGoal = parseInt(goalCell.textContent.trim());
+
+                if (isNaN(updatedGoal)) {
+                    alert('Goal must be a number');
+                    goalCell.textContent = habit.goal; // Reset to original if invalid
+                    return;
+                }
+
+                updateHabit(habit.id, updatedTitle, updatedGoal);
+            };
+
+            nameCell.addEventListener('blur', saveEdit);
+            goalCell.addEventListener('blur', saveEdit);
 
             // Achieved cell
             const achievedCell = document.createElement('td');
@@ -196,6 +221,34 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Error toggling habit:", error);
         }
     }
+
+    function updateHabit(habitId, newTitle, newGoal) {
+        fetch(`/api/habits/${habitId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: newTitle,
+                goal: parseInt(newGoal), // Ensure goal is a number
+            }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update habit');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Habit updated successfully:', data.message);
+                // Optionally show a UI confirmation here
+            })
+            .catch(error => {
+                console.error('Error updating habit:', error);
+                alert('Could not update habit.');
+            });
+    }
+
 
     fetchHabits();
 });

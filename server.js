@@ -49,9 +49,9 @@ db.connect((err) => {
 
 // Use routes
 app.use("/api", accountRoutes);
-app.use("/api", journalRoutes);
-app.use("/api", todoRoutes);
-app.use("/api", challengeRoutes);
+app.use("/api/journal", journalRoutes);
+app.use("/api/todo", todoRoutes);
+app.use("/api/challenge", challengeRoutes);
 app.use("/api/habits", habitRoutes);
 
 // ** Static Pages Routes **
