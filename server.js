@@ -52,7 +52,7 @@ app.use("/api", accountRoutes);
 app.use("/api", journalRoutes);
 app.use("/api", todoRoutes);
 app.use("/api", challengeRoutes);
-app.use("/api", habitRoutes);
+app.use("/api/habits", habitRoutes);
 
 // ** Static Pages Routes **
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "views", "home.html")));

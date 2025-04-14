@@ -16,9 +16,6 @@ router.put("/:habit_id", authenticateUser, habitController.updateHabit);
 router.delete("/:habit_id", authenticateUser, habitController.deleteHabit);
 
 // Toggle habit completion
-router.post('/toggle/:habit_id/:user_id/:date', authenticateUser, habitController.toggleHabit);
-
-// Mark a habit as completed (daily or weekly tracking)
-router.post("/:habit_id/complete/:user_id", authenticateUser, habitController.completeHabit);
+router.post('/toggle/:habit_id/:date', authenticateUser, habitController.toggleHabit);
 
 module.exports = router;

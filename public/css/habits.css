@@ -56,3 +56,8 @@ th {
     margin: 0;
     font-size: 125%;
 }
+
+.hints {
+    grid-column: 1 / 6;
+    grid-row: 3 / 3;
+}

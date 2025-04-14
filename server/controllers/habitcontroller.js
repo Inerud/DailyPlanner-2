@@ -2,7 +2,7 @@ const db = require("../config/db");
 
 // Create a new habit
 exports.createHabit = (req, res) => {
-  const { title, category, goal} = req.body;
+  const { title, category, goal } = req.body;
 
   const sql = `
     INSERT INTO habits (user_id, title, goal) 
@@ -21,20 +21,32 @@ exports.createHabit = (req, res) => {
 
 // Get all habits for a specific user
 exports.getHabits = (req, res) => {
-  const sql = `
-    SELECT habit_id, title, goal, created_at, updated_at 
-    FROM habits WHERE user_id = ?
+  const userId = req.userId;
+
+  const query = `
+      SELECT h.habit_id, h.title, h.goal, 
+             GROUP_CONCAT(hc.completion_date ORDER BY hc.completion_date) AS days
+      FROM habits h
+      LEFT JOIN habit_completions hc ON h.habit_id = hc.habit_id
+      WHERE h.user_id = ?
+      GROUP BY h.habit_id
   `;
 
-  db.query(sql, req.userId, (err, habits) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send("Error fetching habits");
-    }
+  db.query(query, [userId], (err, results) => {
+      if (err) {
+          console.error("Error fetching habits:", err);
+          return res.status(500).json({ error: 'Failed to fetch habits' });
+      }
 
-    res.status(200).json(habits);
+      const habits = results.map(habit => ({
+          ...habit,
+          days: habit.days ? habit.days.split(',') : [],
+      }));
+
+      res.json(habits);
   });
 };
+
 
 // Update an existing habit
 exports.updateHabit = (req, res) => {
@@ -84,11 +96,11 @@ exports.deleteHabit = (req, res) => {
 };
 
 //toggle habit completion
-const db = require('../db'); // adjust path to your DB connection
 
-exports.toggleHabit = (req, res) => {
-  const { habit_id, user_id, date } = req.params;
-  const habit_date = date;
+exports.toggleHabit = async (req, res) => {
+  const user_id = req.userId;
+  const habit_id = req.params.habit_id;
+  const habit_date = req.params.date;
 
   const checkSql = `
     SELECT * FROM habit_completions 
@@ -118,7 +130,7 @@ exports.toggleHabit = (req, res) => {
       // Not completed: insert it
       const insertSql = `
         INSERT INTO habit_completions (habit_id, user_id, habit_date) 
-        VALUES (?, ?, ?, NOW())
+        VALUES (?, ?, ?)
       `;
       db.query(insertSql, [habit_id, user_id, habit_date], (insErr) => {
         if (insErr) {

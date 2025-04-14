@@ -1,27 +1,37 @@
 document.addEventListener("DOMContentLoaded", () => {
     const tableContainer = document.getElementById("main");
+    const habitColors = ["#ffe066", "#f4b0c8", "#a1d0ff", "#b6e3b6"];
 
     let habits = [];
+    const d = new Date();
+    let month = d.getMonth();
 
     async function fetchHabits() {
         try {
             const response = await fetch('/api/habits');
             const data = await response.json();
-
+    
+            console.log("Fetched habits raw response:", data);
+    
+            if (!Array.isArray(data)) {
+                throw new Error("Expected an array but got: " + JSON.stringify(data));
+            }
+    
             habits = data.map(habit => ({
                 id: habit.habit_id,
                 name: habit.title,
                 goal: habit.goal,
                 achieved: 0,
-                days: habit.days || [],
+                days: habit.days || [], // <- this needs to be returned properly!
             }));
-
-            habits.forEach(updateAchieved); // update achieved count
-            createTable(4, habits);
+    
+            habits.forEach(updateAchieved);
+            createTable(month, habits);
         } catch (error) {
             console.error("Failed to fetch habits:", error);
         }
     }
+    
 
     function createTable(month, habitList) {
         tableContainer.innerHTML = ''; // Clear container
@@ -106,9 +116,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 const td = document.createElement('td');
                 td.className = 'tg-0lax habit-day';
                 td.setAttribute('data-day', day);
-                td.addEventListener('click', () => toggleDay(habit.id, day));
+            
+                // Construct full date string
+                const dateStr = `2025-${(month).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            
+                // Check if completed and apply color
+                if (habit.days.includes(dateStr)) {
+                    const color = habitColors[habitIndex % habitColors.length];
+                    td.style.backgroundColor = color;
+                }
+            
+                td.addEventListener('click', () => toggleDay(habit.id, dateStr));
                 row.appendChild(td);
             }
+            
 
             // Goal cell
             const goalCell = document.createElement('td');
@@ -144,9 +165,8 @@ document.addEventListener("DOMContentLoaded", () => {
         createTable(4, habits);
 
         try {
-            const userId = 2; // Replace with actual user ID
             const currentDate = `2025-04-${String(day).padStart(2, '0')}`;
-            await toggleHabit(habitId, userId, currentDate);
+            await toggleHabit(habitId, currentDate);
         } catch (error) {
             console.error("Failed to toggle habit in backend:", error);
         }
@@ -156,19 +176,17 @@ document.addEventListener("DOMContentLoaded", () => {
         habit.achieved = habit.days.length;
     }
 
-    async function toggleHabit(habit_id, user_id, date) {
+    async function toggleHabit(habit_id, date) {
         try {
-            const response = await fetch(`/api/habits/toggle/${habit_id}/${user_id}/${date}`, {
+            const response = await fetch(`/api/habits/toggle/${habit_id}/${date}`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
             });
-
+    
             const data = await response.json();
             console.log(`Habit ${habit_id} on ${date} is now marked as:`, data.status);
             return data.status;
-
+    
         } catch (error) {
             console.error("Error toggling habit:", error);
         }
