@@ -4,19 +4,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let habits = [];
     const d = new Date();
-    let month = d.getMonth();
+    let month = (d.getMonth()) + 1;
 
     async function fetchHabits() {
         try {
             const response = await fetch('/api/habits');
             const data = await response.json();
-    
+
             console.log("Fetched habits raw response:", data);
-    
+
             if (!Array.isArray(data)) {
                 throw new Error("Expected an array but got: " + JSON.stringify(data));
             }
-    
+
             habits = data.map(habit => ({
                 id: habit.habit_id,
                 name: habit.title,
@@ -24,14 +24,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 achieved: 0,
                 days: habit.days || [], // <- this needs to be returned properly!
             }));
-    
+
             habits.forEach(updateAchieved);
             createTable(month, habits);
         } catch (error) {
             console.error("Failed to fetch habits:", error);
+            alert("An error occurred while fetching habits.");
         }
     }
-    
+
 
     function createTable(month, habitList) {
         tableContainer.innerHTML = ''; // Clear container
@@ -116,20 +117,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 const td = document.createElement('td');
                 td.className = 'tg-0lax habit-day';
                 td.setAttribute('data-day', day);
-            
+
                 // Construct full date string
                 const dateStr = `2025-${(month).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-            
+
                 // Check if completed and apply color
                 if (habit.days.includes(dateStr)) {
                     const color = habitColors[habitIndex % habitColors.length];
                     td.style.backgroundColor = color;
                 }
-            
+
                 td.addEventListener('click', () => toggleDay(habit.id, dateStr));
                 row.appendChild(td);
             }
-            
+
 
             // Goal cell
             const goalCell = document.createElement('td');
@@ -150,27 +151,28 @@ document.addEventListener("DOMContentLoaded", () => {
         return tbody;
     }
 
-    async function toggleDay(habitId, day) {
+    async function toggleDay(habitId, dateStr) {
         const habit = habits.find(h => h.id === habitId);
         if (!habit.days) habit.days = [];
-
-        const index = habit.days.indexOf(day);
+    
+        const index = habit.days.indexOf(dateStr);
         if (index === -1) {
-            habit.days.push(day);
+            habit.days.push(dateStr);
         } else {
             habit.days.splice(index, 1);
         }
-
+    
         updateAchieved(habit);
-        createTable(4, habits);
-
+        createTable(month, habits);  // Use the month from the current view if needed
+    
         try {
-            const currentDate = `2025-04-${String(day).padStart(2, '0')}`;
-            await toggleHabit(habitId, currentDate);
+            // Directly use the passed dateStr (which is already in the correct format)
+            await toggleHabit(habitId, dateStr);
         } catch (error) {
             console.error("Failed to toggle habit in backend:", error);
         }
     }
+    
 
     function updateAchieved(habit) {
         habit.achieved = habit.days.length;
@@ -182,11 +184,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
             });
-    
+
             const data = await response.json();
             console.log(`Habit ${habit_id} on ${date} is now marked as:`, data.status);
             return data.status;
-    
+
         } catch (error) {
             console.error("Error toggling habit:", error);
         }
