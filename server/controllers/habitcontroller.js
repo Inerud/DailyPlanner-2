@@ -25,7 +25,7 @@ exports.getHabits = (req, res) => {
 
   const query = `
       SELECT h.habit_id, h.title, h.goal, 
-             GROUP_CONCAT(hc.completion_date ORDER BY hc.completion_date) AS days
+             GROUP_CONCAT(hc.habit_date ORDER BY hc.habit_date) AS days
       FROM habits h
       LEFT JOIN habit_completions hc ON h.habit_id = hc.habit_id
       WHERE h.user_id = ?

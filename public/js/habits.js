@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 name: habit.title,
                 goal: habit.goal,
                 achieved: 0,
-                days: habit.days || [], // <- this needs to be returned properly!
+                days: habit.days || [],
             }));
 
             habits.forEach(updateAchieved);
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         table.appendChild(createColgroup(daysInMonth));
         table.appendChild(createThead(month, daysInMonth));
-        table.appendChild(createTbody(habitList, daysInMonth));
+        table.appendChild(createTbody(habitList, daysInMonth, month));
 
         tableContainer.appendChild(table);
     }
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return thead;
     }
 
-    function createTbody(habitList, daysInMonth) {
+    function createTbody(habitList, daysInMonth, selectedMonth) {
         const tbody = document.createElement('tbody');
 
         habitList.forEach((habit, habitIndex) => {
@@ -119,13 +119,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 td.setAttribute('data-day', day);
 
                 // Construct full date string
-                const dateStr = `2025-${(month).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                const dateStr = `2025-${(selectedMonth).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
 
                 // Check if completed and apply color
-                if (habit.days.includes(dateStr)) {
-                    const color = habitColors[habitIndex % habitColors.length];
-                    td.style.backgroundColor = color;
-                }
+                habit.days.forEach(habitDate => {
+                    const dateOnly = habitDate.split(' ')[0]; // Extract the date part (YYYY-MM-DD)
+                    if (dateOnly === dateStr) {
+                        const color = habitColors[habitIndex % habitColors.length];
+                        td.style.backgroundColor = color;
+                    }
+                });
 
                 td.addEventListener('click', () => toggleDay(habit.id, dateStr));
                 row.appendChild(td);
@@ -154,25 +157,25 @@ document.addEventListener("DOMContentLoaded", () => {
     async function toggleDay(habitId, dateStr) {
         const habit = habits.find(h => h.id === habitId);
         if (!habit.days) habit.days = [];
-    
+
         const index = habit.days.indexOf(dateStr);
         if (index === -1) {
             habit.days.push(dateStr);
         } else {
             habit.days.splice(index, 1);
         }
-    
+
         updateAchieved(habit);
-        createTable(month, habits);  // Use the month from the current view if needed
-    
+        createTable(month, habits);  // Re-render the table with updated habit data
+
         try {
-            // Directly use the passed dateStr (which is already in the correct format)
             await toggleHabit(habitId, dateStr);
         } catch (error) {
             console.error("Failed to toggle habit in backend:", error);
         }
     }
-    
+
+
 
     function updateAchieved(habit) {
         habit.achieved = habit.days.length;
