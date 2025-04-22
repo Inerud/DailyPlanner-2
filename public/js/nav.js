@@ -16,8 +16,6 @@ const tools = document.getElementById("tools");
             <hr>
             <li><a href="mealplanner">Meal Planner</a></li>
             <hr>
-            <li><a href="../">Notes</a></li>
-            <hr>
         </ul>
         `
         // <ul class="account">
