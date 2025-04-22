@@ -14,6 +14,7 @@ const journalRoutes = require("./server/routes/journalRoutes");
 const todoRoutes = require("./server/routes/todoRoutes");
 const challengeRoutes = require("./server/routes/challengeRoutes");
 const habitRoutes = require("./server/routes/habitRoutes");
+const mealRoutes = require('./server/routes/mealRoutes');
 
 // Initialize app
 const app = express();
@@ -53,6 +54,7 @@ app.use("/api", journalRoutes);
 app.use("/api", todoRoutes);
 app.use("/api", challengeRoutes);
 app.use("/api/habits", habitRoutes);
+app.use('/api/meals', mealRoutes);
 
 // ** Static Pages Routes **
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "views", "home.html")));

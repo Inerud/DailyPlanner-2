@@ -43,69 +43,13 @@
             </div>
         </aside>
 
-        <div class="MondayHead">Monday</div>
-        <div class="TuesdayHead">Tuesday</div>
-        <div class="WednesdayHead">Wednesday</div>
-        <div class="ThursdayHead">Thursday</div>
-        <div class="FridayHead">Friday</div>
-        <div class="SaturdayHead">Saturday</div>
-        <div class="SundayHead">Sunday</div>
-        <div class="MondayCont">
-            <Label>Breakfast</Label>
-            <textarea name="" id="" cols="30" rows="5"></textarea>
-            <label for="">Lunch</label>
-            <textarea name="" id="" cols="30" rows="5"></textarea>
-            <label for="">Dinner</label>
-            <textarea name="" id="" cols="30" rows="5"></textarea>
+        <div id="meal-controls">
+            <button id="prev-week">←</button>
+            <input type="date" id="week-picker">
+            <button id="next-week">→</button>
         </div>
-        <div class="TuesdayCont">
-            <Label>Breakfast</Label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-            <label for="">Lunch</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-            <label for="">Dinner</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-        </div>
-        <div class="WednesdayCont">
-            <Label>Breakfast</Label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-            <label for="">Lunch</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-            <label for="">Dinner</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-        </div>
-        <div class="ThursdayCont">
-            <Label>Breakfast</Label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-            <label for="">Lunch</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-            <label for="">Dinner</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-        </div>
-        <div class="FridayCont">
-            <Label>Breakfast</Label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-            <label for="">Lunch</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-            <label for="">Dinner</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-        </div>
-        <div class="SaturdayCont">
-            <Label>Breakfast</Label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-            <label for="">Lunch</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-            <label for="">Dinner</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-        </div>
-        <div class="SundayCont">
-            <Label>Breakfast</Label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-            <label for="">Lunch</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-            <label for="">Dinner</label>
-            <textarea name="" id="" cols="30" rows="10"></textarea>
-        </div>
+
+        <div id="meal-planner"></div>
 
         <footer class="footer">
             <p>Contact: svl19@uni.brighton.ac.uk</p>
@@ -115,6 +59,7 @@
 
     <script src="/js/auth.js"> </script>
     <script src="/js/nav.js"></script>
+    <script src="/js/meal.js"></script>
 </body>
 
 </html>
