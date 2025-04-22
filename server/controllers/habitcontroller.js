@@ -33,17 +33,17 @@ exports.getHabits = (req, res) => {
   `;
 
   db.query(query, [userId], (err, results) => {
-      if (err) {
-          console.error("Error fetching habits:", err);
-          return res.status(500).json({ error: 'Failed to fetch habits' });
-      }
+    if (err) {
+      console.error("Error fetching habits:", err);
+      return res.status(500).json({ error: 'Failed to fetch habits' });
+    }
 
-      const habits = results.map(habit => ({
-          ...habit,
-          days: habit.days ? habit.days.split(',') : [],
-      }));
+    const habits = results.map(habit => ({
+      ...habit,
+      days: habit.days ? habit.days.split(',') : [],
+    }));
 
-      res.json(habits);
+    res.json(habits);
   });
 };
 
@@ -77,23 +77,32 @@ exports.updateHabit = (req, res) => {
 exports.deleteHabit = (req, res) => {
   const { habit_id } = req.params;
 
-  const sql = `
-    DELETE FROM habits WHERE habit_id = ?
-  `;
-
-  db.query(sql, [habit_id], (err, result) => {
+  // First delete completions
+  const deleteCompletions = `DELETE FROM habit_completions WHERE habit_id = ?`;
+  db.query(deleteCompletions, [habit_id], (err) => {
     if (err) {
       console.error(err);
-      return res.status(500).send("Error deleting habit");
+      return res.status(500).send("Error deleting habit completions");
     }
 
-    if (result.affectedRows === 0) {
-      return res.status(404).send('Habit not found');
-    }
 
-    res.status(200).json({ message: 'Habit deleted successfully' });
+    // then delete the habit
+    const deleteHabitSql = `DELETE FROM habits WHERE habit_id = ?`;
+    db.query(deleteHabitSql, [habit_id], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Error deleting habit");
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).send("Habit not found");
+      }
+
+      res.status(200).json({ message: "Habit and completions deleted successfully" });
+    });
   });
 };
+
 
 //toggle habit completion
 

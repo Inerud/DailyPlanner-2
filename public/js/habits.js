@@ -176,6 +176,22 @@ document.addEventListener("DOMContentLoaded", () => {
             row.appendChild(achievedCell);
 
             tbody.appendChild(row);
+
+            //deletecell
+            const deleteCell = document.createElement("td");
+            deleteCell.className = "delete-cell";
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "🗑️"; // or use a ✖️/❌ or actual icon
+            deleteBtn.className = "delete-btn";
+            deleteBtn.addEventListener("click", () => {
+                if (confirm(`Delete habit "${habit.name}"?`)) {
+                    deleteHabit(habit.id);
+                }
+            });
+
+            deleteCell.appendChild(deleteBtn);
+            row.appendChild(deleteCell);
         });
 
         return tbody;
@@ -260,19 +276,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify({ title: "New Habit" })
             });
-    
+
             if (!res.ok) {
                 throw new Error("Failed to add habit");
             }
-    
+
             const newHabit = await res.json();
-    
-            fetchHabits(); 
+
+            fetchHabits();
         } catch (error) {
             console.error(error);
             alert("Could not add habit.");
         }
     }
+
+    async function deleteHabit(habitId) {
+        try {
+            const res = await fetch(`/api/habits/${habitId}`, {
+                method: "DELETE"
+            });
+    
+            if (!res.ok) throw new Error("Failed to delete habit");
+    
+            // Remove from local list and re-draw
+            habitList = habitList.filter(h => h.id !== habitId);
+            drawTable();
+        } catch (err) {
+            console.error(err);
+            alert("Could not delete habit.");
+        }
+    }
+    
 
     fetchHabits();
 });
