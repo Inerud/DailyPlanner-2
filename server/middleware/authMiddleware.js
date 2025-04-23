@@ -5,11 +5,8 @@ const authenticateUser = async (req, res, next) => {
         return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    console.log("Auth0 user:", req.oidc.user); // Debugging
-
     try {
         req.userId = await getOrCreateUser(req.oidc.user);
-        console.log("User ID set in middleware:", req.userId); // Debugging
         next();
     } catch (error) {
         console.error("Error authenticating user:", error);
@@ -24,7 +21,6 @@ const getOrCreateUser = (user) => {
         db.query(query, [user.sub], (err, results) => {
             if (err) return reject(err);
             if (results.length > 0) {
-                console.log("User found in database:", results[0].id); // Debugging
                 return resolve(results[0].id);
             }
 

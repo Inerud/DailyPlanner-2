@@ -10,7 +10,6 @@ exports.getUserData = (req, res) => {
 
 // Fetch user account details
 exports.getAccount = (req, res) => {
-    console.log("User ID from middleware:", req.userId); // Debugging
     const query = "SELECT name, email FROM users WHERE id = ?";
 
     db.query(query, [req.userId], (err, results) => {
