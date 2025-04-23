@@ -15,6 +15,7 @@ const todoRoutes = require("./server/routes/todoRoutes");
 const challengeRoutes = require("./server/routes/challengeRoutes");
 const habitRoutes = require("./server/routes/habitRoutes");
 const mealRoutes = require('./server/routes/mealRoutes');
+const grocerylistRoutes = require("./server/routes/grocerylistRoutes")
 
 // Initialize app
 const app = express();
@@ -55,6 +56,7 @@ app.use("/api/todo", todoRoutes);
 app.use("/api/challenge", challengeRoutes);
 app.use("/api/habits", habitRoutes);
 app.use('/api/meals', mealRoutes);
+app.use('/api/grocery', grocerylistRoutes);
 
 // ** Static Pages Routes **
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "views", "home.html")));

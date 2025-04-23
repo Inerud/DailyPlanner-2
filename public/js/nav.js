@@ -6,7 +6,7 @@ const tools = document.getElementById("tools");
 
         tools.innerHTML = `
         <ul>
-            <li><a href="../">Calendar</a></li>
+            <li><a href="../">Home dashboard</a></li>
             <hr>
             <li><a href="journal">Journal</a></li>
             <hr>

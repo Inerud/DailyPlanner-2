@@ -51,8 +51,19 @@
 
         <div id="meal-planner"></div>
 
-        <button id="generate-list">Generate Grocery List</button>
-        <div id="grocery-list-container" style="margin-top: 1rem;"></div>
+
+        <button id="open-grocery-list">🧾 Open Grocery List</button>
+
+        <div id="grocery-list-modal" style="display:none;">
+            <button id="close-grocery-list">Close</button>
+            <div id="grocery-list-content"></div>
+
+            <div style="margin-top: 1rem;">
+                <button onclick="saveGroceryList()">💾 Save</button>
+                <button onclick="exportGroceryList()">📤 Export</button>
+                <button onclick="shareGroceryList()">📱 Share</button>
+            </div>
+        </div>
 
 
         <footer class="footer">

@@ -50,10 +50,13 @@ function renderMealPlanner(meals = []) {
 }
 
 //Load + save meals:
+let lastFetchedMeals = [];
+
 async function loadMeals() {
     const res = await fetch(`/api/meals?week=${formatDate(currentWeek)}`);
-    const data = await res.json();
-    renderMealPlanner(data);
+    const meals = await res.json();
+    lastFetchedMeals = meals;
+    renderMealPlanner(meals);
 }
 
 async function saveMeal(e) {
