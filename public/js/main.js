@@ -15,12 +15,12 @@
 
 document.addEventListener("DOMContentLoaded", async function () {
   // Select elements
-  const dateDisplay = document.querySelector(".subtitle span");
+  const dateDisplay = document.querySelector(".date");
   const leftArrow = document.querySelector(".left");
   const rightArrow = document.querySelector(".right");
   const todoList = document.querySelector(".todos ul");
   const challengeSection = document.querySelector('.challenge');
-  const greetingElement = document.getElementById("greeting");
+
   // const likebtn = document.getElementById("likebtn");
   // const dislikebtn = document.getElementById("dislikebtn");
 
@@ -232,21 +232,8 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
-  /** User Greeting **/
-  async function setUserGreeting() {
-    try {
-      const response = await fetch("/api/account");
-      const data = await response.json();
-      let greetings = ["Howdy", "Hi", "Nice To See You", "Hi there", "Hey", "Welcome", "Ahoy", "Yo, Yo, Yo", "What's kickin'"];
-      let time = new Date().getHours();
-      let greeting = time < 10 ? "Good Morning" : time >= 20 ? "Good Night" : greetings[Math.floor(Math.random() * greetings.length)];
-      if (data.user) greetingElement.textContent = `${greeting} ${data.user.name}!`;
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  }
+  
 
   /** Initialize Page **/
   updateDateDisplay();
-  setUserGreeting();
 });

@@ -1,3 +1,15 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, auto);
+    /*  grid-template-rows: 1fr auto; */
+    gap: 1.5%;
+    height: fit-content;
+    margin-left: 16%;
+   min-height: 100vh;
+   margin-right: 1.5%;
+  }
+
 .habittable {
     grid-column: 1 / 6;
     grid-row: 2 / 2;

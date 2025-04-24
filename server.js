@@ -52,7 +52,7 @@ db.connect((err) => {
 // Use routes
 app.use("/api", accountRoutes);
 app.use("/api/journal", journalRoutes);
-app.use("/api/todo", todoRoutes);
+app.use("/api/todos", todoRoutes);
 app.use("/api/challenge", challengeRoutes);
 app.use("/api/habits", habitRoutes);
 app.use('/api/meals', mealRoutes);

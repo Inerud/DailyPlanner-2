@@ -5,30 +5,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account - Daily Planner</title>
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/account.css">
 </head>
 
 <body>
     <div class="container">
-        <header>
-            <h1>Account</h1>
-            <a href="/">Back to Home</a>
+        <header class="header">
+            <div class="left-section">
+                <h1 class="title" class="fredericka-the-great-regular">Account settings</h1>
+            </div>
+
+            <div class="right-section">
+                <img src="/images/Poppy.png" alt="Poppy" class="flower" />
+                <span class="greeting" id="greeting">Good Day! Log in to see your data</span>
+            </div>
         </header>
 
-        <aside class="tools">
-            <div id="tools"></div>
-            <div class="auth">
-                <ul class="account">
-                    <hr>
-                    <li></span> <span id="auth-section"><a href="/login">login</a></span>
-                    </li>
-                    <hr>
-                </ul>
-            </div>
-        </aside>
 
-        <main>
+        <button id="navToggle" class="nav-toggle" aria-label="Toggle Navigation">☰</button>
+        <nav id="tools" class="tools"></nav>
+
+        <main class="main-content">
             <form id="account-form">
                 <label for="name">Name:</label>
                 <input type="text" id="name" required>

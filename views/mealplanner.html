@@ -5,67 +5,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <!-- <link rel="stylesheet" href="/css/mealplanner.css"> -->
 </head>
 
 <body>
     <div class="container">
+
         <header class="header">
-            <div class="pagetitle">
-                <h1 id="title">Meal Planner</h1>
-            </div>
-            <div class="flower">
-                <img src="poppy.png" alt="Flower">
-            </div>
-            <div class="subtitle">
-                <span>Week 7: 24.-2.</span>
-                <div class="arrows">
-                    <span class="left">&lt</span>
-                    <span class="right">&gt</span>
+            <div class="left-section">
+                <h1 class="title" class="fredericka-the-great-regular">Meal Planner</h1>
+                <div class="date-nav">
+                    <span class="date"></span>
+                    <div class="arrows">
+                        <span class="left">&lt;</span>
+                        <span class="right">&gt;</span>
+                    </div>
                 </div>
             </div>
-            <div class="subtitle2">
-                <span><a href="/">back to homepage</a></span>
+
+            <div class="right-section">
+                <img src="/images/Poppy.png" alt="Poppy" class="flower" />
+                <span class="greeting" id="greeting">Good Day! Log in to see your data</span>
             </div>
         </header>
 
-        <aside class="tools">
-            <div id="tools"></div>
-            <div class="auth">
-                <ul class="account">
-                    <hr>
-                    <li></span> <span id="auth-section"><a href="/login">login</a></span>
-                    </li>
-                    <hr>
-                </ul>
+        <button id="navToggle" class="nav-toggle" aria-label="Toggle Navigation">☰</button>
+        <nav id="tools" class="tools"></nav>
+
+        <main class="main-content">
+
+            <div id="meal-controls">
+                <button id="prev-week">←</button>
+                <input type="date" id="week-picker">
+                <button id="next-week">→</button>
             </div>
-        </aside>
 
-        <div id="meal-controls">
-            <button id="prev-week">←</button>
-            <input type="date" id="week-picker">
-            <button id="next-week">→</button>
-        </div>
-
-        <div id="meal-planner"></div>
+            <div id="meal-planner"></div>
 
 
-        <button id="open-grocery-list">🧾 Open Grocery List</button>
+            <button id="open-grocery-list">🧾 Open Grocery List</button>
 
-        <div id="grocery-list-modal" style="display:none;">
-            <button id="close-grocery-list">Close</button>
-            <div id="grocery-list-content"></div>
+            <div id="grocery-list-modal" style="display:none;">
+                <button id="close-grocery-list">Close</button>
+                <div id="grocery-list-content"></div>
 
-            <div style="margin-top: 1rem;">
-                <button onclick="saveGroceryList()">💾 Save</button>
-                <button onclick="exportGroceryList()">📤 Export</button>
-                <button onclick="shareGroceryList()">📱 Share</button>
+                <div style="margin-top: 1rem;">
+                    <button onclick="saveGroceryList()">💾 Save</button>
+                    <button onclick="exportGroceryList()">📤 Export</button>
+                    <button onclick="shareGroceryList()">📱 Share</button>
+                </div>
             </div>
-        </div>
 
-
+        </main>
         <footer class="footer">
             <p>Contact: svl19@uni.brighton.ac.uk</p>
         </footer>

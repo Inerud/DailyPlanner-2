@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/habits.css">
 </head>
@@ -11,60 +14,56 @@
 <body>
     <div class="container">
         <header class="header">
-            <div class="pagetitle">
-                <h1 id="title">Habits</h1>
-            </div>
-            <div class="flower">
-                <img src="/images/daisy.png" alt="Sunflower">
-            </div>
-            <div class="subtitle">
-                <span>March</span>
-                <div class="arrows">
-                    <span class="left">&lt</span>
-                    <span class="right">&gt</span>
+            <div class="left-section">
+                <h1 class="title" class="fredericka-the-great-regular">Habit tracker</h1>
+                <div class="date-nav">
+                    <span class="date"></span>
+                    <div class="arrows">
+                        <span class="left">&lt;</span>
+                        <span class="right">&gt;</span>
+                    </div>
                 </div>
             </div>
-            <div class="subtitle2">
-                <span><a href="/">back to homepage</a></span>
+
+            <div class="right-section">
+                <img src="/images/daisy.png" alt="Daisy" class="flower" />
+                <span class="greeting" id="greeting">Good Day! Log in to see your data</span>
             </div>
         </header>
 
-        <aside class="tools">
-            <div id="tools"></div>
-            <div class="auth">
-                <ul class="account">
-                    <hr>
-                    <li></span> <span id="auth-section"><a href="/login">login</a></span>
-                    </li>
-                    <hr>
+
+        <button id="navToggle" class="nav-toggle" aria-label="Toggle Navigation">☰</button>
+        <nav id="tools" class="tools"></nav>
+
+        <main class="main-content">
+            <div class="habittable" id="main">
+                <p> Log in to track your habits.</p>
+                <p><span id="auth-section"><a href="/login">login</a></span></p>
+            </div>
+
+            <div class="addhabit">
+                <button id="addHabitBtn">+ New Habit</button>
+            </div>
+
+            <div class="hints">
+                <ul>
+                    <h2>How to get started:</h2>
+                    <li><span>Set your habits by clicking on +.</span></li>
+                    <li><span>Set a monthly goal for each habit.</span></li>
+                    <li><span>Click on any empty block in the calendar to mark a habit as done. Click again to
+                            toggle.</span></li>
+
+                    <h2>Tips:</h2>
+                    <li><span>Habits should be formed for life, until they become like brushing teeth.</span></li>
+                    <li><span>Goals should be flexible. You don’t need to try and maintain streaks. Just set a realistic
+                            and achievable goal and try to achieve it.</span></li>
                 </ul>
             </div>
-        </aside>
-
-        <main class="habittable" id="main">
-            <p> Log in to track your habits.</p>
-            <p><span id="auth-section"><a href="/login">login</a></span></p>
         </main>
 
-        <div class="addhabit">
-            <button id="addHabitBtn">+ New Habit</button>
-        </div>
-
-        <div class="hints">
-            <ul>
-                <h2>How to get started:</h2>
-                <li><span>Set your habits by clicking on +.</span></li>
-                <li><span>Set a monthly goal for each habit.</span></li>
-                <li><span>Click on any empty block in the calendar to mark a habit as done. Click again to toggle.</span></li>
-
-                <h2>Tips:</h2>
-                <li><span>Habits should be formed for life, until they become like brushing teeth.</span></li>
-                <li><span>Goals should be flexible. You don’t need to try and maintain streaks. Just set a realistic and achievable goal and try to achieve it.</span></li>         
-            </ul>
-        </div>
-
         <footer class="footer">
-            <p>Contact: svl19@uni.brighton.ac.uk</p>
+            <span>Contact: svl19@uni.brighton.ac.uk</span>
+            <span>Github: https://github.com/Inerud/DailyPlanner-2</span>
         </footer>
     </div>
 

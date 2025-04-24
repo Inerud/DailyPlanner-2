@@ -9,145 +9,137 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap" rel="stylesheet">
     <title>Home - Daily Planner</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/home.css">
 </head>
 
 <body>
     <div class="container">
         <header class="header">
-            <div class="pagetitle">
-                <h1 id="title" class="fredericka-the-great-regular">Daily Planner</h1>
-            </div>
-            <div class="flower">
-                <img src="/images/Poppy.png" alt="Poppy">
-            </div>
-            <div class="fredericka-the-great-regular">
-                <div class="subtitle">
-                    <span>Tuesday 28, February 2025 </span>
+            <div class="left-section">
+                <h1 class="title" class="fredericka-the-great-regular">Daily Planner</h1>
+                <div class="date-nav">
+                    <span class="date"></span>
                     <div class="arrows">
-                        <span class="left">&lt</span>
-                        <span class="right">&gt</span>
+                        <span class="left">&lt;</span>
+                        <span class="right">&gt;</span>
                     </div>
                 </div>
             </div>
-            <div class="subtitle2">
-                <span id="greeting">Good Day! Log in to see your data</span>
+
+            <div class="right-section">
+                <img src="/images/Poppy.png" alt="Poppy" class="flower" />
+                <span class="greeting" id="greeting">Good Day! Log in to see your data</span>
             </div>
-
-
         </header>
 
-        <aside class="tools">
-            <div id="tools"></div>
-            <ul class="account">
-                <hr>
-                <li></span> <span id="auth-section"><a href="/login">login</a></span>
-                </li>
-                <hr>
-            </ul>
-        </aside>
+        <button id="navToggle" class="nav-toggle" aria-label="Toggle Navigation">☰</button>
+        <nav id="tools" class="tools"></nav>
 
-        <main class="schedule">
-            <h2>Today's Schedule</h2>
-            <table class="tg">
-                <tbody>
-                    <tr>
-                        <td class="time">6-7 AM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">7-8 AM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">8-9 AM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">9-10 AM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">10-11 AM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">11-12 PM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">12-1 PM</td>
-                        <td class="event"> Doctors appointment</td>
-                    </tr>
-                    <tr>
-                        <td class="time">1-2 PM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">2-3 PM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">3-4 PM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">4-5 PM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">5-6 PM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">6-7 PM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">7-8 PM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">8-9 PM</td>
-                        <td class="event"></td>
-                    </tr>
-                    <tr>
-                        <td class="time">9-10 PM</td>
-                        <td class="event"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <a href="../">show calendar</a>
-        </main>
-
-        <section class="todos">
-            <h2>Top priorities</h2>
-            <ul id="todoList">
-                <!-- Todos dynamically added here -->
-            </ul>
-            <p id="noTodosMessage" style="display: none;">Log in to see your to-do's</p>
-            <a href="todo">Show more</a>
-        </section>
-
-        <section class="challenge">
-            <h2>Today's challenge</h2>
-            <div class="challengetext">
-                <p id="challengetitle"></p>
-                <p id="challengecomment"> Not fetching challenge...</p>
+        <main class="main-content">
+            <div class="schedule">
+                <h2>Today's Schedule</h2>
+                <table class="tg">
+                    <tbody>
+                        <tr>
+                            <td class="time">6-7 AM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">7-8 AM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">8-9 AM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">9-10 AM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">10-11 AM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">11-12 PM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">12-1 PM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">1-2 PM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">2-3 PM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">3-4 PM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">4-5 PM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">5-6 PM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">6-7 PM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">7-8 PM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">8-9 PM</td>
+                            <td class="event"></td>
+                        </tr>
+                        <tr>
+                            <td class="time">9-10 PM</td>
+                            <td class="event"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="../">show calendar</a>
             </div>
-            <button id="completebtn">Mark as Complete</button>
-            <button id="likebtn">Like</button>
-            <button id="dislikebtn">Dislike</button>
-        </section>
 
-        <section class="habits">
-            <h2>Habits</h2>
-            <ul>
-                <li class="checked">list element</li>
-                <li>list element</li>
-                <li>list element</li>
-            </ul>
-            <a href="../">show more</a>
-        </section>
+            <section class="todos">
+                <h2>Top priorities</h2>
+                <ul id="todoList">
+                    <!-- Todos dynamically added here -->
+                </ul>
+                <p id="noTodosMessage" style="display: none;">Log in to see your to-do's</p>
+                <a href="todo">Show more</a>
+            </section>
+
+            <section class="challenge">
+                <h2>Today's challenge</h2>
+                <div class="challengetext">
+                    <p id="challengetitle"></p>
+                    <p id="challengecomment"> Not fetching challenge...</p>
+                </div>
+                <button id="completebtn">Mark as Complete</button>
+                <button id="likebtn">Like</button>
+                <button id="dislikebtn">Dislike</button>
+            </section>
+
+            <section class="habits">
+                <h2>Habits</h2>
+                <ul>
+                    <li class="checked">list element</li>
+                    <li>list element</li>
+                    <li>list element</li>
+                </ul>
+                <a href="../">show more</a>
+            </section>
+
+        </main>
 
         <footer class="footer">
             <p>Contact: s.letrud1@uni.brighton.ac.uk</p>
@@ -157,8 +149,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
     <script src="/js/fireworks.js"></script>
     <script src="/js/main.js"></script>
-    <script src="/js/auth.js"></script>
     <script src="/js/nav.js"></script>
+    <script src="/js/auth.js"></script>
 </body>
 
 </html>

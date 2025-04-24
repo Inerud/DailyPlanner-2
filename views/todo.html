@@ -4,71 +4,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/todo.css">
 </head>
 
 <body>
   <div class="container">
+
     <header class="header">
-      <div class="pagetitle">
-        <h1 id="title">To-Dos</h1>
+      <div class="left-section">
+        <h1 class="title" class="fredericka-the-great-regular">To-Dos</h1>
       </div>
-      <div class="flower">
-        <img src="/images/sunflower.png" alt="Sunflower">
-      </div>
-      <div class="subtitle">
-        <span></span>
-        <div class="arrows">
-        </div>
-      </div>
-      <div class="subtitle2">
-        <span><a href="/">back to homepage</a></span>
+
+      <div class="right-section">
+        <img src="/images/sunflower.png" alt="Sunflower" class="flower" />
+        <span class="greeting" id="greeting">Good Day! Log in to see your data</span>
       </div>
     </header>
 
-    <aside class="tools">
-      <div id="tools"></div>
-      <div class="auth">
-          <ul class="account">
-              <hr>
-              <li></span> <span id="auth-section"><a href="/login">login</a></span>
-              </li>
-              <hr>
-          </ul>
-      </div>
-  </aside>
+    <button id="navToggle" class="nav-toggle" aria-label="Toggle Navigation">☰</button>
+    <nav id="tools" class="tools"></nav>
 
-    <div class="todotable">
-      <table class="tg">
-        <thead>
-          <tr>
-            <th data-column="date">Date <span class="arrow">&#11206</span></th> <!-- &#11206 down, &#11205 up -->
-            <th data-column="time">Time <span class="arrow"></span></th>
-            <th data-column="priority">Priority <span class="arrow"></span></th>
-            <th data-column="recurring">Recurring <span class="arrow"></span></th>
-            <th data-column="description">To-do <span class="arrow"></span></th>
-            <!-- <th data-column="tags">Tags </th> -->
-            <th data-column="completed">Done</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody> </tbody>
-      </table>
-    </div>
+    <main class="main-content">
 
-    <div class="buttons">
-      <button id="addButton">+</button>
-    </div>
-
-
-    <div class="old-todo-section">
-      <h2>Old Todos</h2>
-      <div class="oldtodotable">
+      <div class="todotable">
         <table class="tg">
           <thead>
             <tr>
-              <th data-column="date">Date <span class="arrow"></span></th> <!-- &#11206 down, &#11205 up -->
+              <th data-column="date">Date <span class="arrow">&#11206</span></th> <!-- &#11206 down, &#11205 up -->
               <th data-column="time">Time <span class="arrow"></span></th>
               <th data-column="priority">Priority <span class="arrow"></span></th>
               <th data-column="recurring">Recurring <span class="arrow"></span></th>
@@ -78,16 +44,43 @@
               <th>Edit</th>
             </tr>
           </thead>
-          <tbody> </tbody> 
+          <tbody> </tbody>
         </table>
       </div>
-      <button id="loadMoreButton" style="display:none;">Load More</button>
-      <button id="toggleCompletedButton">Show All Todos</button>
-    </div>
 
-    <footer class="footer">
-      <p>Contact: svl19@uni.brighton.ac.uk</p>
-    </footer>
+      <div class="buttons">
+        <button id="addButton">+</button>
+      </div>
+
+
+      <div class="old-todo-section">
+        <h2>Old Todos</h2>
+        <div class="oldtodotable">
+          <table class="tg">
+            <thead>
+              <tr>
+                <th data-column="date">Date <span class="arrow"></span></th> <!-- &#11206 down, &#11205 up -->
+                <th data-column="time">Time <span class="arrow"></span></th>
+                <th data-column="priority">Priority <span class="arrow"></span></th>
+                <th data-column="recurring">Recurring <span class="arrow"></span></th>
+                <th data-column="description">To-do <span class="arrow"></span></th>
+                <!-- <th data-column="tags">Tags </th> -->
+                <th data-column="completed">Done</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody> </tbody>
+          </table>
+        </div>
+        <button id="loadMoreButton" style="display:none;">Load More</button>
+        <button id="toggleCompletedButton">Show All Todos</button>
+      </div>
+
+    </main>
+    
+      <footer class="footer">
+        <p>Contact: svl19@uni.brighton.ac.uk</p>
+      </footer>
   </div>
 
   <script src="/js/auth.js"> </script>

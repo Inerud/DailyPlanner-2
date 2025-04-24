@@ -1,55 +1,99 @@
-.container{
-
-}
-
-.todotable{
-    grid-column: 1 / 6;
-    grid-row: 2 / 2;
-}
-
-.old-todo-section{
-    grid-column: 1 / 6;
-    grid-row: 4 / 4;
-}
-
-.buttons{
-    grid-column: 6 / 6;
-    grid-row: 3 / 3;
-}
-.tg {
-    border-spacing: 30px;
+/* General container layout with space for sidebar */
+  /* Header and Footer should span full width */
+  .header,
+  .footer {
+    grid-column: 1 / -1;
+    padding: 1rem;
+    background-color: #EEE2DC;
+  }
+  
+  /* Header styling for spacing */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .title {
+    font-family: 'Fredericka the Great';
+    font-size: 2rem;
+  }
+  
+  /* Sunflower image */
+  .flower {
+    max-height: 50px;
+  }
+  
+  /* Table containers */
+  .todotable,
+  .old-todo-section {
+    grid-column: 1 / -1;
+    overflow-x: auto;
+  }
+  
+  .todotable {
+    grid-row: 2;
+  }
+  
+  .old-todo-section {
+    grid-row: 4;
+  }
+  
+  /* Add Button */
+  .buttons {
+    grid-column: 1 / -1;
+    text-align: right;
+    margin: 1rem 0;
+  }
+  
+  #addButton {
+    font-size: 2rem;
+    background-color: #AC3B61;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+  }
+  
+  /* Table styles */
+  .tg {
     width: 100%;
-}
-
-.tg td {
-    border-color: black;
-    border-style: solid;
-    border-width: 1px;
-    font-size: 14px;
-    overflow: hidden;
-    padding: 10px 5px;
-    word-break: normal;
-    background-color: antiquewhite;
-}
-
-.tg th {
-    border-color: black;
-    border-style: solid;
-    border-width: 1px;
-    font-size: 14px;
-    font-weight: normal;
-    overflow: hidden;
-    padding: 10px 5px;
-    word-break: normal;
-}
-
-.tg .tg-0lax {
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+  }
+  
+  .tg th,
+  .tg td {
+    border: 1px solid #000;
+    padding: 10px;
+    background-color: #FFF5E1;
     text-align: left;
-    vertical-align: top
-}
-
-.buttons {
-    grid-column: 1 / 6;
-    float: left;
-    margin-left: auto;
-}
+    word-break: break-word;
+  }
+  
+  .tg th {
+    background-color: #EDC7B7;
+    font-weight: bold;
+  }
+  
+  /* Responsive tweaks */
+  @media (max-width: 768px) {
+    .container {
+      margin-left: 0;
+      grid-template-columns: 1fr;
+    }
+  
+    .header, .footer, .todotable, .old-todo-section, .buttons {
+      grid-column: 1 / -1;
+    }
+  
+    #addButton {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+    }
+  }
+  

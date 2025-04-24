@@ -8,7 +8,6 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     const addButton = document.getElementById("addButton");
-    const dateDisplay = document.querySelector(".subtitle span");
     const loadMoreButton = document.getElementById("loadMoreButton");
     const toggleCompletedButton = document.getElementById("toggleCompletedButton");
     const oldTodoSection = document.querySelector(".old-todo-section");
@@ -451,12 +450,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Function to update date display and reload data
-    function updateDateDisplay() {
-        dateDisplay.textContent = formatFullDate(selectedDate);
-    }
-
-    updateDateDisplay();
     fetchTodos();
     setUpSorting();
 });

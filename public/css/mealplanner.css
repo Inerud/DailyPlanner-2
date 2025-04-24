@@ -1,18 +1,4 @@
-/* Container for the whole planner */
-.container {
-    display: grid;
-    grid-template-rows: auto auto 1fr auto auto; /* header, controls, planner, grocery, footer */
-    gap: 16px;
-    padding: 1rem;
-    max-width: 100%;
-  }
-  
-  /* Header & Footer full-width */
-  .header,
-  .footer {
-    grid-column: 1 / -1;
-  }
-  
+
   /* Controls: week nav + button */
   #meal-controls {
     display: flex;

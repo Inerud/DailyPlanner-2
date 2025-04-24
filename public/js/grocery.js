@@ -1,10 +1,14 @@
 let groceryTextAreas = {};
 
-document.getElementById('open-grocery-list').onclick = () => {
-  const groupedMeals = generateGroceryListFromMeals(lastFetchedMeals);
-  renderGroceryList(groupedMeals);
+document.getElementById('open-grocery-list').onclick = async () => {
+  const saved = await tryLoadSavedGroceryList();
+  if (!saved) {
+    const groupedMeals = generateGroceryListFromMeals(lastFetchedMeals);
+    renderGroceryList(groupedMeals);
+  }
   document.getElementById('grocery-list-modal').style.display = 'block';
 };
+
 
 document.getElementById('close-grocery-list').onclick = () => {
   document.getElementById('grocery-list-modal').style.display = 'none';
@@ -14,8 +18,8 @@ function generateGroceryListFromMeals(meals) {
   const grouped = {};
 
   meals.forEach(meal => {
-    const key = `${meal.content}`;
-    if (!grouped[key]) grouped[key] = "";
+    const key = meal.content?.trim();
+    if (key && !grouped[key]) grouped[key] = "";    
   });
   return grouped;
 }
@@ -38,7 +42,7 @@ function renderGroceryList(mealGroups) {
 
     const textarea = document.createElement('textarea');
     textarea.placeholder = 'Add ingredients...';
-    textarea.rows = 4;
+    textarea.rows = 2;
 
     groceryTextAreas[label] = textarea;
 
@@ -46,11 +50,9 @@ function renderGroceryList(mealGroups) {
     section.appendChild(textarea);
     container.appendChild(section);
   });
-
-  loadSavedGroceryList(); // Load DB version
 }
 
-async function loadSavedGroceryList() {
+async function tryLoadSavedGroceryList() {
   try {
     const res = await fetch(`/api/grocery?week=${formatDate(currentWeek)}`);
     const text = await res.text();
@@ -59,7 +61,7 @@ async function loadSavedGroceryList() {
     const list = Object.entries(saved)
       .filter(([_, content]) => content.trim().length > 0);
 
-    if (list.length === 0) return;
+    if (list.length === 0) return false;
 
     const grouped = {};
     list.forEach(([label, value]) => {
@@ -67,11 +69,13 @@ async function loadSavedGroceryList() {
     });
 
     renderGroceryList(grouped);
-    document.getElementById('grocery-list-modal').style.display = 'block';
+    return true;
   } catch (err) {
     console.log("No saved grocery list found or it’s empty.");
+    return false;
   }
 }
+
 
 
 async function saveGroceryList() {
@@ -90,7 +94,9 @@ async function saveGroceryList() {
   });
 
   alert('Grocery list saved!');
+  renderChecklistPreview();
 }
+
 
 function exportGroceryList() {
   const list = convertTextareasToListItems();
@@ -192,3 +198,5 @@ function renderChecklistPreview() {
     container.appendChild(div);
   });
 }
+
+
