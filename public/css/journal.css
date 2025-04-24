@@ -2,13 +2,13 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto auto;
-    gap: 1.5%;
     height: fit-content;
-    padding: 0 1rem;
-    margin: 0 auto;
-    margin-left: 220px; /* same as .tools width */
-    padding: 0 1rem;
     max-width: calc(100% - 220px); /* optional: prevent overflow */
+}
+
+.main-content {
+    gap: 1.5rem;
+    padding: 1rem;
 }
 
 .container.full-width {
@@ -56,6 +56,36 @@
     display: flex;
     flex-direction: column;
 }
+.journal-form input,
+.journal-form textarea,
+.journal-form button {
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.journal-form input:focus,
+.journal-form textarea:focus {
+    outline: none;
+    border-color: #AC3B61;
+    box-shadow: 0 0 0 2px rgba(172, 59, 97, 0.2);
+}
+
+#save-journal {
+    background-color: #AC3B61;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 6px;
+    align-self: flex-start;
+    transition: background-color 0.2s ease;
+}
+
+#save-journal:hover {
+    background-color: #8e2e50;
+}
+
 
 .titleinput {
     border: none;
