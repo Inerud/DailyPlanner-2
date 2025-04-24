@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/css/habits.css">
 </head>
 
-<body>
+<body id="top">
     <div class="container">
         <header class="header">
             <div class="left-section">
@@ -45,26 +45,43 @@
                 <button id="addHabitBtn">+ New Habit</button>
             </div>
 
-            <div class="hints">
-                <ul>
-                    <h2>How to get started:</h2>
-                    <li><span>Set your habits by clicking on +.</span></li>
-                    <li><span>Set a monthly goal for each habit.</span></li>
-                    <li><span>Click on any empty block in the calendar to mark a habit as done. Click again to
-                            toggle.</span></li>
+            <div class="user-help">
 
+                <div class="get-started">
+                    <ul>
+                        <h2>How to get started:</h2>
+                        <li><span>Set your habits by clicking on +.</span></li>
+                        <li><span>Set a monthly goal for each habit.</span></li>
+                        <li><span>Click on any empty block in the calendar to mark a habit as done. Click again to
+                                toggle.</span></li>
+                    </ul>
+                </div>
+                <div class="tips">
+                    <ul></ul>
                     <h2>Tips:</h2>
                     <li><span>Habits should be formed for life, until they become like brushing teeth.</span></li>
-                    <li><span>Goals should be flexible. You don’t need to try and maintain streaks. Just set a realistic
+                    <li><span>Goals should be flexible. You don’t need to try and maintain streaks. Just set a
+                            realistic
                             and achievable goal and try to achieve it.</span></li>
-                </ul>
+                    </ul>
+                </div>
+
             </div>
         </main>
 
         <footer class="footer">
-            <span>Contact: svl19@uni.brighton.ac.uk</span>
-            <span>Github: https://github.com/Inerud/DailyPlanner-2</span>
-        </footer>
+            <p class="footer-credit">Created by <strong>Stine Vik Letrud</strong></p>
+            <p class="footer-contact">
+              Contact: <a href="mailto:s.letrud1@uni.brighton.ac.uk">s.letrud1@uni.brighton.ac.uk</a>
+            </p>
+            <p class="footer-github">
+              GitHub: <a href="https://github.com/YOUR_GITHUB_HERE" target="_blank">github.com/YOUR_GITHUB_HERE</a>
+            </p>
+            <p class="footer-description">
+              Daily Planner is a personal web app designed to help users manage tasks, track habits, journal, and stay organized day by day.
+            </p>
+            <a href="#top" class="footer-back-to-top">↑ Back to top</a>
+          </footer>
     </div>
 
     <script src="/js/auth.js"> </script>

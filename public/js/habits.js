@@ -1,7 +1,5 @@
 //TODO: 
-//add habit
-//delete habit
-//edit habit(name, and goal)
+
 //confetti when monthly goal reached
 //swap view between months
 

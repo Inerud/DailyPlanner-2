@@ -1,10 +1,12 @@
-/* General container layout with space for sidebar */
-  /* Header and Footer should span full width */
+
   .header,
   .footer {
     grid-column: 1 / -1;
+  }
+
+  .main-content {
+    gap: 1.5rem;
     padding: 1rem;
-    background-color: #EEE2DC;
   }
   
   /* Header styling for spacing */
@@ -14,11 +16,7 @@
     align-items: center;
     flex-wrap: wrap;
   }
-  
-  .title {
-    font-family: 'Fredericka the Great';
-    font-size: 2rem;
-  }
+
   
   /* Sunflower image */
   .flower {

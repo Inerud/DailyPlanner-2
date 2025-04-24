@@ -3,8 +3,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-template-rows: auto auto 1fr auto;
-    gap: 1.5rem;
-    padding: 1rem;
     min-height: 100vh;
     box-sizing: border-box;
   }
@@ -17,6 +15,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1.5rem;
+    padding: 1rem;
     grid-column: 1 / -1;
   }
   
