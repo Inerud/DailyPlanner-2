@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td class="date">${todo.date ? formatDate(todo.date) : "—"}</td>
                 <td class="time">${todo.time || "—"}</td>
                 <td class="priority">${todo.priority || "Low"}</td>
-                <td class="recurring">${todo.recurring || "None"}</td>
+                <!--  <td class="recurring">${todo.recurring || "None"}</td> -->
                 <td class="to-do">${todo.description}</td>
                 <!-- <td class="tags">${todo.tags || "—"}</td> -->
                 <td class="done">
@@ -118,15 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <option value="High">High</option>
             </select>
         </td>
-        <td>
-            <select class="edit-recurring">
-                <option value="None">None</option>
-                <option value="Daily">Daily</option>
-                <option value="Weekly">Weekly</option>
-            </select>
-        </td>
         <td><input type="text" class="edit-description" placeholder="Enter task"></td>
-        <td><input type="text" class="edit-tags" placeholder="Tags (comma separated)"></td>
         <td class="done">
             <input type="checkbox" class="edit-done">
         </td>
@@ -406,7 +398,6 @@ document.addEventListener("DOMContentLoaded", () => {
             <td>${todo.date ? formatDate(todo.date) : "—"}</td>
             <td>${todo.time || "—"}</td>
             <td>${todo.priority || "Low"}</td>
-            <td>${todo.recurring || "None"}</td>
             <td>${todo.description}</td>
             <!-- <td>${todo.tags || "—"}</td> -->
             <td><input type="checkbox" class="todo-checkbox" data-id="${todo.id}" ${todo.completed ? "checked" : ""}></td>
