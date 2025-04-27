@@ -134,7 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
             </select>
         </td>
         <td><input type="text" class="edit-description" placeholder="Enter task"></td>
-        <td><input type="text" class="edit-tags" placeholder="Tags (comma separated)"></td>
         <td class="done">
             <input type="checkbox" class="edit-done">
         </td>

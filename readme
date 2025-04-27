@@ -1,4 +1,10 @@
-To run:
+Daily Planner is a personal web app designed to help users manage tasks, track habits, journal, and stay organized day by day.
+It has been created for module C601 as a final year project at University of Brighton.
+
+You can find the deployed web application here:
+https://dailyplanner-cnle.onrender.com/
+
+To run on localhost:
 Prerequesites: node
 
 npm install -> downloads all dependancies
