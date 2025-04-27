@@ -21,10 +21,6 @@ db.connect((err) => {
 
 db.on("error", (err) => {
   console.error("MySQL Error: ", err.message);
-  if (err.code === "PROTOCOL_CONNECTION_LOST") {
-    console.log("Reconnecting...");
-    handleDisconnect(); // Reconnect on lost connection
-  }
 });
 
 module.exports = db;
