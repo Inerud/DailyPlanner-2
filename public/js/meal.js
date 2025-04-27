@@ -65,11 +65,17 @@ async function saveMeal(e) {
     const day = textarea.dataset.day;
     const type = textarea.dataset.type;
 
+    const dayIndex = (weekdays.indexOf(day)) + 1; // Monday = 0, Sunday = 6
+    const selectedDateObj = new Date(currentWeek);
+    selectedDateObj.setDate(currentWeek.getDate() + dayIndex);
+    const selectedDate = formatDate(selectedDateObj); // 'YYYY-MM-DD'
+
     await fetch('/api/meals', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             week_start: formatDate(currentWeek),
+            date: selectedDate,
             day_of_week: day,
             meal_type: type,
             content,

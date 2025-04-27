@@ -10,6 +10,7 @@ const authMiddleware = require("./server/middleware/authMiddleware");
 
 // Import routes
 const accountRoutes = require("./server/routes/accountRoutes");
+const dashboardRoutes = require("./server/routes/dashboardRoutes");
 const journalRoutes = require("./server/routes/journalRoutes");
 const todoRoutes = require("./server/routes/todoRoutes");
 const challengeRoutes = require("./server/routes/challengeRoutes");
@@ -51,6 +52,7 @@ db.connect((err) => {
 
 // Use routes
 app.use("/api", accountRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/journal", journalRoutes);
 app.use("/api/todos", todoRoutes);
 app.use("/api/challenge", challengeRoutes);

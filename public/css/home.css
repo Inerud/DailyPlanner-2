@@ -1,115 +1,168 @@
 /* Updated container layout with responsive grid */
 .container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-template-rows: auto auto 1fr auto;
-    min-height: 100vh;
-    box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.header,
+.footer {
+  grid-column: 1 / -1;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 15px;
+  margin: 25px;
+}
+
+.habits {
+  grid-column: span 2 / span 2;
+  grid-row: span 2 / span 2;
+}
+
+.schedule {
+  grid-row: span 3 / span 3;
+  grid-column-start: 3;
+}
+
+.todos {
+  grid-column-start: 3;
+  grid-row-start: 4;
+}
+
+.challenge {
+  grid-row: span 2 / span 2;
+  grid-column-start: 1;
+  grid-row-start: 3;
+}
+
+.meals {
+  grid-row: span 2 / span 2;
+  grid-column-start: 2;
+  grid-row-start: 3;
+}
+
+.schedule,
+.todos,
+.challenge,
+.habits,
+.meals {
+  background-color: #fff;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.schedule table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #EEE2DC;
+}
+
+.schedule td,
+.schedule th {
+  padding: 10px;
+  border: 1px solid #bab2b5;
+  text-align: left;
+}
+
+.schedule .time {
+  font-weight: bold;
+  color: #123C69;
+  white-space: nowrap;
+}
+
+.schedule tr:nth-child(even) {
+  background-color: #EDC7B7;
+}
+
+.schedule tr:nth-child(odd) {
+  background-color: #EEE2DC;
+}
+
+.schedule tr:hover {
+  background-color: #AC3B61;
+  color: white;
+}
+
+.todos ul,
+.habits ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.todos ul li,
+.habits ul li {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.todos ul li.checked,
+.habits ul li.checked {
+  text-decoration: line-through;
+  color: #777;
+}
+
+.challenge .challengetext {
+  padding: 1rem;
+  background-color: #EEE2DC;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin-left: 0;
+    margin-right: 0;
   }
-  
-  .header, .footer {
-    grid-column: 1 / -1;
-  }
-  
-  .main-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    padding: 1rem;
-    grid-column: 1 / -1;
-  }
-  
-  .schedule,
-  .todos,
-  .challenge,
-  .habits {
-    background-color: #fff;
-    padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .schedule table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #EEE2DC;
-  }
-  
-  .schedule td,
-  .schedule th {
-    padding: 10px;
-    border: 1px solid #bab2b5;
-    text-align: left;
-  }
-  
+
   .schedule .time {
-    font-weight: bold;
-    color: #123C69;
-    white-space: nowrap;
+    font-size: 0.875rem;
   }
-  
-  .schedule tr:nth-child(even) {
-    background-color: #EDC7B7;
-  }
-  
-  .schedule tr:nth-child(odd) {
-    background-color: #EEE2DC;
-  }
-  
-  .schedule tr:hover {
-    background-color: #AC3B61;
-    color: white;
-  }
-  
-  .todos ul,
-  .habits ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
+
   .todos ul li,
   .habits ul li {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #ccc;
-    cursor: pointer;
+    font-size: 0.875rem;
   }
-  
-  .todos ul li.checked,
-  .habits ul li.checked {
-    text-decoration: line-through;
-    color: #777;
+
+  .header,
+  .footer,
+  .main-content {
+    grid-column: 1 / -1;
   }
-  
-  .challenge .challengetext {
-    padding: 1rem;
-    background-color: #EEE2DC;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+
+  .main-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 8px;
   }
-  
-  @media (max-width: 768px) {
-    .container {
-      margin-left: 0;
-      margin-right: 0;
-    }
-  
-    .schedule .time {
-      font-size: 0.875rem;
-    }
-  
-    .todos ul li,
-    .habits ul li {
-      font-size: 0.875rem;
-    }
-  
-    .header, .footer, .main-content {
-      grid-column: 1 / -1;
-    }
-  
-    .main-content {
-      grid-template-columns: 1fr;
-    }
+
+  .schedule {
+    grid-column: span 3 / span 3;
+    grid-row: span 2 / span 2;
+    grid-column-start: 1;
+    grid-row-start: 1;
   }
-  
+
+  .todos {
+    grid-column: span 3 / span 3;
+    grid-column-start: 1;
+    grid-row-start: 3;
+  }
+
+  .challenge {
+    grid-column: span 3 / span 3;
+    grid-column-start: 1;
+    grid-row-start: 5;
+  }
+
+  .meals {
+    grid-column: span 3 / span 3;
+    grid-row-start: 6;
+  }
+}

@@ -16,16 +16,16 @@ exports.getMealsByWeek = (req, res) => {
 };
 
 exports.saveMeal = (req, res) => {
-  const { week_start, day_of_week, meal_type, content } = req.body;
+  const { week_start, date, day_of_week, meal_type, content } = req.body;
   const userId = req.userId;
 
   const sql = `
-    INSERT INTO meals (user_id, week_start, day_of_week, meal_type, content)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO meals (user_id, week_start, date, day_of_week, meal_type, content)
+    VALUES (?, ?, ?, ?, ?, ?)
     ON DUPLICATE KEY UPDATE content = VALUES(content)
   `;
 
-  db.query(sql, [userId, week_start, day_of_week, meal_type, content], (err) => {
+  db.query(sql, [userId, week_start, date, day_of_week, meal_type, content], (err) => {
     if (err) return res.status(500).json({ error: err });
     res.json({ success: true });
   });

@@ -32,12 +32,4 @@ function handleDisconnect() {
 // Start the initial connection
 handleDisconnect();
 
-// Periodically restart connection every 10 minutes
-setInterval(() => {
-  console.log("Restarting MySQL connection...");
-  db.end(() => {
-    handleDisconnect();
-  });
-}, 10 * 60 * 1000); // 10 minutes
-
 module.exports = db;

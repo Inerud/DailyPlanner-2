@@ -69,11 +69,25 @@ document.addEventListener("DOMContentLoaded", () => {
         todos.forEach((todo) => {
             const row = document.createElement("tr");
             row.dataset.id = todo.id; // Store todo ID for editing
-            row.innerHTML = `
+            const today = formatDate(new Date());
+            if (formatDate(todo.date) == today) {
+                row.innerHTML = `
+                <td class="date" style="font-weight: bold;">Today</td>
+                <td class="time" style="font-weight: bold;">${todo.time || "—"}</td>
+                <td class="priority" style="font-weight: bold;">${todo.priority || "Low"}</td>
+                <td class="to-do" style="font-weight: bold;">${todo.description}</td>
+                <td class="done">
+                    <input type="checkbox" class="todo-checkbox" data-id="${todo.id}" ${todo.completed ? "checked" : ""}>
+                </td>
+                <td class="edit">
+                    <button class="editButton">Edit</button>
+                </td>
+            `;
+            } else {
+                row.innerHTML = `
                 <td class="date">${todo.date ? formatDate(todo.date) : "—"}</td>
                 <td class="time">${todo.time || "—"}</td>
                 <td class="priority">${todo.priority || "Low"}</td>
-                <td class="recurring">${todo.recurring || "None"}</td>
                 <td class="to-do">${todo.description}</td>
                 <!-- <td class="tags">${todo.tags || "—"}</td> -->
                 <td class="done">
@@ -83,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <button class="editButton">Edit</button>
                 </td>
             `;
+            }
 
             tableBody.appendChild(row);
 
@@ -118,13 +133,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 <option value="High">High</option>
             </select>
         </td>
-        <td>
-            <select class="edit-recurring">
-                <option value="None">None</option>
-                <option value="Daily">Daily</option>
-                <option value="Weekly">Weekly</option>
-            </select>
-        </td>
         <td><input type="text" class="edit-description" placeholder="Enter task"></td>
         <td><input type="text" class="edit-tags" placeholder="Tags (comma separated)"></td>
         <td class="done">
@@ -148,7 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
             date: row.querySelector(".edit-date").value,
             time: row.querySelector(".edit-time").value,
             priority: row.querySelector(".edit-priority").value,
-            recurring: row.querySelector(".edit-recurring").value,
             description: row.querySelector(".edit-description").value,
              // tags: row.querySelector(".edit-tags").value,
             completed: row.querySelector(".edit-done").checked,
@@ -234,13 +241,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         <option value="High" ${todo.priority === "High" ? "selected" : ""}>High</option>
                     </select>
                 </td>
-                <td>
-                    <select class="edit-recurring">
-                        <option value="None" ${todo.recurring === "None" ? "selected" : ""}>None</option>
-                        <option value="Daily" ${todo.recurring === "Daily" ? "selected" : ""}>Daily</option>
-                        <option value="Weekly" ${todo.recurring === "Weekly" ? "selected" : ""}>Weekly</option>
-                    </select>
-                </td>
                 <td><input type="text" class="edit-description" value="${todo.description}"></td>
                 <td><input type="text" class="edit-tags" value="${todo.tags || ''}"></td>
                 <td class="done">
@@ -272,7 +272,6 @@ document.addEventListener("DOMContentLoaded", () => {
             date: row.querySelector(".edit-date").value,
             priority: row.querySelector(".edit-priority").value,
             time: row.querySelector(".edit-time").value,
-            recurring: row.querySelector(".edit-recurring").value,
             description: row.querySelector(".edit-description").value,
             // tags: row.querySelector(".edit-tags").value,
         };
@@ -406,7 +405,6 @@ document.addEventListener("DOMContentLoaded", () => {
             <td>${todo.date ? formatDate(todo.date) : "—"}</td>
             <td>${todo.time || "—"}</td>
             <td>${todo.priority || "Low"}</td>
-            <td>${todo.recurring || "None"}</td>
             <td>${todo.description}</td>
             <!-- <td>${todo.tags || "—"}</td> -->
             <td><input type="checkbox" class="todo-checkbox" data-id="${todo.id}" ${todo.completed ? "checked" : ""}></td>

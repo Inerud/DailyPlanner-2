@@ -36,6 +36,8 @@
         <nav id="tools" class="tools"></nav>
 
         <main class="main-content">
+            <div class="habits"><a href="../">show all habits</a></div> 
+
             <div class="schedule">
                 <h2>Today's Schedule</h2>
                 <table class="tg">
@@ -106,16 +108,13 @@
                         </tr>
                     </tbody>
                 </table>
-                <a href="../">show calendar</a>
             </div>
 
             <section class="todos">
                 <h2>Top priorities</h2>
-                <ul id="todoList">
-                    <!-- Todos dynamically added here -->
-                </ul>
+                <ul id="todoList"></ul>
                 <p id="noTodosMessage" style="display: none;">Log in to see your to-do's</p>
-                <a href="todo">Show more</a>
+                <a href="todo">Show all todos</a>
             </section>
 
             <section class="challenge">
@@ -125,19 +124,9 @@
                     <p id="challengecomment"> Not fetching challenge...</p>
                 </div>
                 <button id="completebtn">Mark as Complete</button>
-                <button id="likebtn">Like</button>
-                <button id="dislikebtn">Dislike</button>
             </section>
 
-            <section class="habits">
-                <h2>Habits</h2>
-                <ul>
-                    <li class="checked">list element</li>
-                    <li>list element</li>
-                    <li>list element</li>
-                </ul>
-                <a href="../">show more</a>
-            </section>
+            <div class="meals"></div>
 
         </main>
 

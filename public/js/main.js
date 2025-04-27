@@ -1,18 +1,3 @@
-// add "reward" for completing exercise
-// implement challenge
-// implement habits
-// fix styling
-//cross out finished todos in the chedule
-// if daete = oday -> display TOday: date
-// fix bug: date selector doesnt do anything
-
-// challenge:
-// add completed toggle working with habit tracker
-// add categories, let the user pick a challenge between the categories for each day?
-
-//Physical, Mental, Social, Creative, Productive)
-
-
 document.addEventListener("DOMContentLoaded", async function () {
   // Select elements
   const dateDisplay = document.querySelector(".date");
@@ -76,6 +61,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       .then(response => response.json())
       .then(challenges => {
         challengeSection.innerHTML = '';
+        challengeSection.innerHTML = `<h2> Select todays challenge! <h2>`
 
         challenges.forEach(challenge => {
           const challengeCard = document.createElement("div");
@@ -176,10 +162,12 @@ document.addEventListener("DOMContentLoaded", async function () {
   /** Data Fetching and Updating **/
   async function loadDataForDate(date) {
     try {
-      const response = await fetch(`/api/data?date=${date.toISOString().split("T")[0]}`);
+      const response = await fetch(`/api/dashboard?date=${date.toISOString().split("T")[0]}`);
       const data = await response.json();
       updateTodos(data.todos || []);
-      updateSchedule(data.todos);
+      updateSchedule(data.todos || []);
+      updateHabits(data.habits || []);
+      updateMeals(data.meals || []);
     } catch (error) {
       console.error("Error fetching data for selected date:", error);
     }
@@ -232,8 +220,51 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
+  function updateHabits(habits) {
+    const habitsSection = document.querySelector(".habits");
+    if (!habitsSection) {
+      console.error("Can't find habits section!");
+      return;
+    }
+  
+    habitsSection.innerHTML = '';
+  
+    if (habits.length === 0) {
+      habitsSection.innerHTML = "<p>No habits set for today.</p>";
+      return;
+    }
+  
+    habits.forEach(habit => {
+      const habitCard = document.createElement("div");
+      habitCard.classList.add("habit-card");
+  
+      habitCard.innerHTML = `
+        <h3>${habit.title}</h3>
+        <p>Status: ${habit.days.includes(selectedDate.toISOString().split('T')[0]) ? "Completed!" : "Not completed"}</p>
+      `;
+  
+      habitsSection.appendChild(habitCard);
+    });
+  }
   
 
+  function updateMeals(meals) {
+    const mealsSection = document.querySelector(".meals");
+    mealsSection.innerHTML = "<h2> Today's meal plan <h2>";
+  
+    meals.forEach(meal => {
+      const mealCard = document.createElement("div");
+      mealCard.classList.add("meal-card");
+      mealCard.innerHTML = `
+        <h3>${meal.content}</h3>
+        <p>${meal.meal_type}</p>
+      `;
+      mealsSection.appendChild(mealCard);
+    });
+  }
+
   /** Initialize Page **/
+
+  loadDataForDate(selectedDate);
   updateDateDisplay();
 });
