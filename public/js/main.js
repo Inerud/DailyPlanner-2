@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
   
-    habitsSection.innerHTML = '';
+    habitsSection.innerHTML = '<h2> Habits </h2>';
   
     if (habits.length === 0) {
       habitsSection.innerHTML = "<p>No habits set for today.</p>";
