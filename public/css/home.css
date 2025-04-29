@@ -114,7 +114,7 @@
   border-radius: 5px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 800px) {
   .container {
     margin-left: 0;
     margin-right: 0;
@@ -129,40 +129,20 @@
     font-size: 0.875rem;
   }
 
-  .header,
-  .footer,
-  .main-content {
-    grid-column: 1 / -1;
+  @media (max-width: 800px) {
+    .main-content {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 8px;
+    }
+  
+    .schedule,
+    .todos,
+    .challenge,
+    .habits,
+    .meals {
+      grid-column: auto !important;
+      grid-row: auto !important;
+    }
   }
-
-  .main-content {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-    gap: 8px;
-  }
-
-  .schedule {
-    grid-column: span 3 / span 3;
-    grid-row: span 2 / span 2;
-    grid-column-start: 1;
-    grid-row-start: 1;
-  }
-
-  .todos {
-    grid-column: span 3 / span 3;
-    grid-column-start: 1;
-    grid-row-start: 3;
-  }
-
-  .challenge {
-    grid-column: span 3 / span 3;
-    grid-column-start: 1;
-    grid-row-start: 5;
-  }
-
-  .meals {
-    grid-column: span 3 / span 3;
-    grid-row-start: 6;
-  }
-}
+}  
