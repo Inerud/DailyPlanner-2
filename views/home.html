@@ -28,7 +28,7 @@
 
             <div class="right-section">
                 <img src="/images/poppy.png" alt="Poppy" class="flower" />
-                <span class="greeting" id="greeting">Good Day! Log in to see your data</span>
+                <span class="greeting" id="greeting">Good Day! <a href="/login">Login</a> to see your data</span>
             </div>
         </header>
 
@@ -36,7 +36,7 @@
         <nav id="tools" class="tools"></nav>
 
         <main class="main-content">
-            <div class="habits"><a href="../">show all habits</a></div> 
+            <div class="habits"><a href="../">show all habits</a></div>
 
             <div class="schedule">
                 <h2>Today's Schedule</h2>
@@ -113,7 +113,7 @@
             <section class="todos">
                 <h2>Top priorities</h2>
                 <ul id="todoList"></ul>
-                <p id="noTodosMessage" style="display: none;">Log in to see your to-do's</p>
+                <p id="noTodosMessage" style="display: none;">Login to see your to-do's</p>
                 <a href="todo">Show all todos</a>
             </section>
 
@@ -123,26 +123,16 @@
                     <p id="challengetitle"></p>
                     <p id="challengecomment"> Not fetching challenge...</p>
                 </div>
-                <button id="completebtn">Mark as Complete</button>
+                <div class="completebtndiv">
+                    <button id="completebtn">Mark as Complete</button>
+                </div>
             </section>
 
             <div class="meals"></div>
 
         </main>
 
-        <footer class="footer">
-            <p class="footer-credit">Created by <strong>Stine Vik Letrud</strong></p>
-            <p class="footer-contact">
-              Contact: <a href="mailto:s.letrud1@uni.brighton.ac.uk">s.letrud1@uni.brighton.ac.uk</a>
-            </p>
-            <p class="footer-github">
-              GitHub: <a href="https://github.com/Inerud/DailyPlanner-2" target="_blank">github.com/Inerud/DailyPlanner-2</a>
-            </p>
-            <p class="footer-description">
-              Daily Planner is a personal web app designed to help users manage tasks, track habits, journal, and stay organized day by day.
-            </p>
-            <a href="#top" class="footer-back-to-top">↑ Back to top</a>
-          </footer>
+        <footer class="footer"></footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>

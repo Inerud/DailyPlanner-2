@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const rightArrow = document.querySelector(".right");
   const todoList = document.querySelector(".todos ul");
   const challengeSection = document.querySelector('.challenge');
+  completebtn = document.querySelector(".completebtndiv");
 
   // const likebtn = document.getElementById("likebtn");
   // const dislikebtn = document.getElementById("dislikebtn");
@@ -114,9 +115,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         <p id="challengetitle">${challenge.title}</p>
         <p id="challengecomment">${challenge.exercise}</p>
       </div>
-      <button id="completebtn">Mark as Complete</button>
-      <button id="likebtn">Like</button>
-      <button id="dislikebtn">Dislike</button>
+      <div class="completebtndiv">
+         <button id="completebtn">Mark as Complete</button>
+      </div>
     `;
   
     document.getElementById("completebtn").addEventListener("click", () => markAsComplete());
@@ -156,7 +157,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   function completefeedback() {
     fireworks();
-
+    completebtn.innerHTML = ``;
   }
 
   /** Data Fetching and Updating **/

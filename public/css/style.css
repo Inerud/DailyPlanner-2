@@ -74,6 +74,7 @@ body {
 .tools a.active {
   background-color: #FFDDC1;
   font-weight: bold;
+  width: 85%;
 }
 
 /* ============================= */
